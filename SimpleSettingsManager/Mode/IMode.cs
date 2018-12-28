@@ -61,11 +61,5 @@ namespace SimpleSettingsManager.Mode
         bool DeleteString(string uniqueName);
         bool DeleteByteArray(string uniqueName);
         bool DeleteBoolean(string uniqueName);
-
-        bool AddMetaData(string varName, string group, string varValue, string description);
-        bool SetMetaData(string varName, string varValue);
-        bool EditMetaData(string varName, string description, string group);
-        bool DeleteMetaData(string varName);
-
     }
 }
