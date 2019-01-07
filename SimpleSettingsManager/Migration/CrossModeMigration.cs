@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleSettingsManager.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,21 +7,36 @@ using System.Threading.Tasks;
 
 namespace SimpleSettingsManager.Migration
 {
-    class CrossModeMigration
+    public class CrossModeMigration
     {
-        private SSM_File _ssmFile;
-        private SSM_File.Mode _ImportAsMode, _ExportAsMode;
+        private SSM_File _importSsmFile, _exportSsmFile;
 
-        public CrossModeMigration(SSM_File ssmFile, SSM_File.Mode exportAsMode)
+        public CrossModeMigration(SSM_File importSsmFile, SSM_File exportSsmFile)
         {
-            _ssmFile = ssmFile;
-            _ImportAsMode = _ssmFile.GetMode();
-            _ExportAsMode = exportAsMode;
+            _importSsmFile = importSsmFile;
+            _exportSsmFile = exportSsmFile;
         }
 
-        public void Start()
+        public void Migrate()
         {
+            SSM importSsm = new SSM(_importSsmFile);
+            SSM exportSsm = new SSM(_exportSsmFile);
 
+            importSsm.Open();
+            exportSsm.Open();
+
+            DataEntry[] dataEntries = importSsm.GetAllTypes();
+            Console.WriteLine("Total Entries: {0}", dataEntries.Length);
+
+            importSsm.Close();
+
+            foreach (DataEntry data in dataEntries)
+            {
+                Console.WriteLine("Importing '{0}'", data.GetVariableName());
+                exportSsm.ImportDataEntry(data);
+            }
+
+            exportSsm.Close();
         }
     }
 }

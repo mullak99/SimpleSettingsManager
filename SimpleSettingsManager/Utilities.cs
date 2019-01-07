@@ -62,4 +62,10 @@ namespace SimpleSettingsManager
             return Regex.Replace(usString, @"[\r\n\x00\x1a\\'""]", @"\$0");
         }
     }
+
+    internal class MetaDataObject
+    {
+        public MetaDataObject()
+        { }
+    }
 }

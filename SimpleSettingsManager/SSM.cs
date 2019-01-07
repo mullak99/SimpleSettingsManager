@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using SimpleSettingsManager.Data;
 using SimpleSettingsManager.Mode;
 
 namespace SimpleSettingsManager
@@ -321,6 +322,65 @@ namespace SimpleSettingsManager
         public bool DeleteBoolean(string uniqueName)
         {
             return _handler.DeleteBoolean(uniqueName);
+        }
+
+        #endregion
+
+        #region DataEntry
+
+        public void ImportDataEntry(DataEntry dataEntry)
+        {
+            _handler.ImportDataEntry(dataEntry);
+        }
+
+        public DataEntry[] GetAllMetaData()
+        {
+            return _handler.GetAllMetaData();
+        }
+        public DataEntry[] GetAllInt16()
+        {
+            return _handler.GetAllInt16();
+        }
+        public DataEntry[] GetAllInt32()
+        {
+            return _handler.GetAllInt32();
+        }
+        public DataEntry[] GetAllInt()
+        {
+            return _handler.GetAllInt();
+        }
+        public DataEntry[] GetAllInt64()
+        {
+            return _handler.GetAllInt64();
+        }
+        public DataEntry[] GetAllLong()
+        {
+            return _handler.GetAllLong();
+        }
+        public DataEntry[] GetAllFloat()
+        {
+            return _handler.GetAllFloat();
+        }
+        public DataEntry[] GetAllDouble()
+        {
+            return _handler.GetAllDouble();
+        }
+        public DataEntry[] GetAllString()
+        {
+            return _handler.GetAllString();
+        }
+        public DataEntry[] GetAllByteArrays()
+        {
+            return _handler.GetAllByteArrays();
+        }
+        public DataEntry[] GetAllBooleans()
+        {
+            return _handler.GetAllBooleans();
+        }
+
+        public DataEntry[] GetAllTypes()
+        {
+            return _handler.GetAllTypes();
         }
 
         #endregion

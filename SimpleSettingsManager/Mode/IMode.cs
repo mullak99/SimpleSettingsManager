@@ -65,6 +65,7 @@ namespace SimpleSettingsManager.Mode
         bool DeleteByteArray(string uniqueName);
         bool DeleteBoolean(string uniqueName);
 
+        DataEntry[] GetAllMetaData();
         DataEntry[] GetAllInt16();
         DataEntry[] GetAllInt32();
         DataEntry[] GetAllInt();

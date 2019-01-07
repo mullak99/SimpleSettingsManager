@@ -33,11 +33,14 @@ namespace SimpleSettingsManager.Mode
                 AddMetaData("SSM_LastAccessFormatVersion", "LastAccessInfo", SSM.GetSsmFormatVersion(), "The current SSM Format version of the SSM file.");
                 AddMetaData("SSM_CreationTimestamp", "HistoricalInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was created.");
                 AddMetaData("SSM_LastLoadedTimestamp", "LastAccessInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was last loaded.");
+                AddMetaData("SSM_CreationMode", "HistoricalInfo", "SQLite", "The SSM mode used to create the SSM file.");
+                AddMetaData("SSM_LastAccessMode", "LastAccessInfo", "SQLite", "The SSM mode used to last access the SSM file.");
             }
             else
             {
                 SetMetaData("SSM_LastAccessFormatVersion", SSM.GetSsmFormatVersion());
                 SetMetaData("SSM_LastLoadedTimestamp", Convert.ToString(IntUtilities.GetUnixTimestamp()));
+                SetMetaData("SSM_LastAccessMode", "SQLite");
             }
         }
 
@@ -401,7 +404,133 @@ namespace SimpleSettingsManager.Mode
 
         public void ImportDataEntry(DataEntry dataEntry)
         {
-            throw new NotImplementedException();
+            if (dataEntry.GetVariableType() == typeof(MetaDataObject))
+            {
+                if (!DoesMetaDataVariableExist(dataEntry.GetVariableName()))
+                {
+                    AddMetaData(dataEntry.GetVariableName(), dataEntry.GetVariableGroup(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()), dataEntry.GetVariableDescription());
+                }
+                else
+                {
+                    SetMetaData(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()));
+                    EditMetaData(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+            }
+            else if (dataEntry.GetVariableType() == typeof(Int16))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                {
+                    AddInt16(dataEntry.GetVariableName(), BitConverter.ToInt16(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetInt16(dataEntry.GetVariableName(), BitConverter.ToInt16(dataEntry.GetVariableValue(), 0));
+                    EditInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+            }
+            else if (dataEntry.GetVariableType() == typeof(Int32))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                {
+                    AddInt32(dataEntry.GetVariableName(), BitConverter.ToInt32(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetInt32(dataEntry.GetVariableName(), BitConverter.ToInt32(dataEntry.GetVariableValue(), 0));
+                    EditInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+            }
+            else if (dataEntry.GetVariableType() == typeof(Int64))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                {
+                    AddInt64(dataEntry.GetVariableName(), BitConverter.ToInt64(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetInt64(dataEntry.GetVariableName(), BitConverter.ToInt64(dataEntry.GetVariableValue(), 0));
+                    EditInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+            }
+            else if (dataEntry.GetVariableType() == typeof(float))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                {
+                    AddFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0));
+                    EditFloat(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+            }
+            else if (dataEntry.GetVariableType() == typeof(Double))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                {
+                    AddDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0));
+                    EditDouble(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+            }
+            else if (dataEntry.GetVariableType() == typeof(String))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                {
+                    AddString(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetString(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()));
+                    EditString(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+            }
+            else if (dataEntry.GetVariableType() == typeof(byte[]))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                {
+                    AddByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableValue(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableValue());
+                    EditByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+            }
+            else if (dataEntry.GetVariableType() == typeof(Boolean))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                {
+                    AddBoolean(dataEntry.GetVariableName(), BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetBoolean(dataEntry.GetVariableName(), BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0));
+                    EditBoolean(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+            }
+        }
+
+        public DataEntry[] GetAllMetaData()
+        {
+            if (DoesTableExist("_MetaData"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM _MetaData", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(MetaDataObject), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToInt16(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToInt16(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllInt16()
@@ -570,6 +699,7 @@ namespace SimpleSettingsManager.Mode
         {
             List<DataEntry> dataList = new List<DataEntry>();
 
+            if (this.GetAllMetaData() != null) dataList.AddRange(this.GetAllMetaData());
             if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16());
             if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32());
             if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64());

@@ -35,11 +35,14 @@ namespace SimpleSettingsManager.Mode
                 AddMetaData("SSM_LastAccessFormatVersion", "LastAccessInfo", SSM.GetSsmFormatVersion(), "The current SSM Format version of the SSM file.");
                 AddMetaData("SSM_CreationTimestamp", "HistoricalInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was created.");
                 AddMetaData("SSM_LastLoadedTimestamp", "LastAccessInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was last loaded.");
+                AddMetaData("SSM_CreationMode", "HistoricalInfo", "XML", "The SSM mode used to create the SSM file.");
+                AddMetaData("SSM_LastAccessMode", "LastAccessInfo", "XML", "The SSM mode used to last access the SSM file.");
             }
             else
             {
                 SetMetaData("SSM_LastAccessFormatVersion", SSM.GetSsmFormatVersion());
                 SetMetaData("SSM_LastLoadedTimestamp", Convert.ToString(IntUtilities.GetUnixTimestamp()));
+                SetMetaData("SSM_LastAccessMode", "XML");
             }
         }
 
@@ -848,14 +851,64 @@ namespace SimpleSettingsManager.Mode
             throw new NotImplementedException();
         }
 
+        public DataEntry[] GetAllMetaData()
+        {
+            if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "_MetaData")).Count > 0)
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                XmlNodeList xmlNodeList = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "_MetaData"));
+
+                foreach (XmlNode xmlNodeGroup in xmlNodeList)
+                {
+                    for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
+                    {
+                        dataList.Add(new DataEntry(typeof(MetaDataObject), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText), Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                    }
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
         public DataEntry[] GetAllInt16()
         {
-            throw new NotImplementedException();
+            if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Int16")).Count > 0)
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                XmlNodeList xmlNodeList = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Int16"));
+
+                foreach (XmlNode xmlNodeGroup in xmlNodeList)
+                {
+                    for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
+                    {
+                        dataList.Add(new DataEntry(typeof(Int16), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, BitConverter.GetBytes(Convert.ToInt16(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText)), BitConverter.GetBytes(Convert.ToInt16(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText)), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                    }
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllInt32()
         {
-            throw new NotImplementedException();
+            if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Int32")).Count > 0)
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                XmlNodeList xmlNodeList = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Int32"));
+
+                foreach (XmlNode xmlNodeGroup in xmlNodeList)
+                {
+                    for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
+                    {
+                        dataList.Add(new DataEntry(typeof(Int32), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, BitConverter.GetBytes(Convert.ToInt32(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText)), BitConverter.GetBytes(Convert.ToInt32(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText)), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                    }
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllInt()
@@ -865,7 +918,22 @@ namespace SimpleSettingsManager.Mode
 
         public DataEntry[] GetAllInt64()
         {
-            throw new NotImplementedException();
+            if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Int64")).Count > 0)
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                XmlNodeList xmlNodeList = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Int64"));
+
+                foreach (XmlNode xmlNodeGroup in xmlNodeList)
+                {
+                    for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
+                    {
+                        dataList.Add(new DataEntry(typeof(Int64), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, BitConverter.GetBytes(Convert.ToInt64(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText)), BitConverter.GetBytes(Convert.ToInt64(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText)), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                    }
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllLong()
@@ -875,33 +943,109 @@ namespace SimpleSettingsManager.Mode
 
         public DataEntry[] GetAllFloat()
         {
-            throw new NotImplementedException();
+            if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Float")).Count > 0)
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                XmlNodeList xmlNodeList = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Float"));
+
+                foreach (XmlNode xmlNodeGroup in xmlNodeList)
+                {
+                    for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
+                    {
+                        dataList.Add(new DataEntry(typeof(float), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, BitConverter.GetBytes(Convert.ToSingle(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText)), BitConverter.GetBytes(Convert.ToSingle(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText)), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                    }
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllDouble()
         {
-            throw new NotImplementedException();
+            if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Double")).Count > 0)
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                XmlNodeList xmlNodeList = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Double"));
+
+                foreach (XmlNode xmlNodeGroup in xmlNodeList)
+                {
+                    for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
+                    {
+                        dataList.Add(new DataEntry(typeof(Double), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, BitConverter.GetBytes(Convert.ToDouble(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText)), BitConverter.GetBytes(Convert.ToDouble(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText)), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                    }
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllString()
         {
-            throw new NotImplementedException();
+            if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "String")).Count > 0)
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                XmlNodeList xmlNodeList = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "String"));
+
+                foreach (XmlNode xmlNodeGroup in xmlNodeList)
+                {
+                    for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
+                    {
+                        dataList.Add(new DataEntry(typeof(String), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText), Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                    }
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllByteArrays()
         {
-            throw new NotImplementedException();
+            if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "ByteArray")).Count > 0)
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                XmlNodeList xmlNodeList = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "ByteArray"));
+
+                foreach (XmlNode xmlNodeGroup in xmlNodeList)
+                {
+                    for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
+                    {
+                        dataList.Add(new DataEntry(typeof(byte[]), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText), Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                    }
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllBooleans()
         {
-            throw new NotImplementedException();
+            if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Boolean")).Count > 0)
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                XmlNodeList xmlNodeList = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*", "Boolean"));
+
+                foreach (XmlNode xmlNodeGroup in xmlNodeList)
+                {
+                    for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
+                    {
+                        dataList.Add(new DataEntry(typeof(Boolean), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, BitConverter.GetBytes(Convert.ToBoolean(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText)), BitConverter.GetBytes(Convert.ToBoolean(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText)), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                    }
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllTypes()
         {
             List<DataEntry> dataList = new List<DataEntry>();
 
+            if (this.GetAllMetaData() != null) dataList.AddRange(this.GetAllMetaData());
             if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16());
             if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32());
             if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64());
