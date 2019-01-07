@@ -1,53 +1,58 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using SimpleSettingsManager.Mode;
 
 namespace SimpleSettingsManager
 {
     public class SSM
     {
-        private string _settingsPath;
-        private Mode _mode;
+        private const string _ssmFormatVer = "1.0";
+        private const string _minSsmFormatVer = "1.0";
+
+        private SSM_File _ssmFile;
+
         private IMode _handler;
 
-        public SSM(string settingsPath, Mode mode = Mode.Auto)
+        public SSM(SSM_File ssmFile)
         {
-            _settingsPath = settingsPath;
-            _mode = mode;
-
-            switch (_mode)
-            {
-                case Mode.SQLite:
-                    {
-                        _handler = new SQLite();
-                        break;
-                    }
-                case Mode.XML:
-                    {
-                        _handler = new XML();
-                        break;
-                    }
-                case Mode.Auto:
-                    {
-                        if (IntUtilities.isSQLiteDB(_settingsPath))
-                            _handler = new SQLite();
-                        else
-                            _handler = new XML();
-                        break;
-                    }
-                default:
-                    break;
-            }
+            _ssmFile = ssmFile;
+            _handler = _ssmFile._handler;
         }
+
+        /// <summary>
+        /// Used to get the current version of SSM
+        /// </summary>
+        /// <returns>The version number of SSM.</returns>
+        public static string GetVersion()
+        {
+            string[] ver = (typeof(SSM).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version).Split('.');
+            return "v" + ver[0] + "." + ver[1] + "." + ver[2];
+        }
+
+        public static string GetSsmFormatVersion()
+        {
+            return _ssmFormatVer;
+        }
+
+        public static string GetMinimumSupportedSsmFormat()
+        {
+            return _minSsmFormatVer;
+        }
+
+        #region Init
 
         public void Open()
         {
-            _handler.Open(_settingsPath);
+            _handler.Open(_ssmFile.GetPath(true));
         }
 
         public void Close()
         {
             _handler.Close();
         }
+
+        #endregion
 
         #region Add Variables
 
@@ -314,15 +319,54 @@ namespace SimpleSettingsManager
         }
 
         #endregion
+    }
 
-        #region Enums
+    public class SSM_File
+    {
+        private string _settingsPath;
+        private Mode _mode;
+        internal IMode _handler;
 
-        public enum Mode {
-            Auto,
+        public SSM_File(string settingsPath)
+        {
+            if (File.Exists(settingsPath))
+            {
+                _settingsPath = settingsPath;
+                _mode = DetectMode();
+            }
+            else throw new Exception("File not found");
+        }
+
+        private Mode DetectMode()
+        {
+            if (Utilities.IsFileSQLiteDB(_settingsPath))
+            {
+                _handler = new SQLite();
+                return Mode.SQLite;
+            }
+            else if (Utilities.IsFileXML(_settingsPath))
+            {
+                _handler = new XML();
+                return Mode.XML;
+            }
+            else throw new FormatException("Unsupported file format");
+        }
+
+        public string GetPath(bool fullPath = false)
+        {
+            if (fullPath) return Path.GetFullPath(_settingsPath);
+            else return _settingsPath;
+        }
+
+        public Mode GetMode()
+        {
+            return _mode;
+        }
+
+        public enum Mode
+        {
             SQLite,
             XML
         };
-
-        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleSettingsManager.Data;
+using System;
 
 namespace SimpleSettingsManager.Mode
 {
@@ -6,6 +7,8 @@ namespace SimpleSettingsManager.Mode
     {
         void Open(string path);
         void Close();
+
+        string GetMode();
 
         bool AddInt16(string uniqueName, Int16 value, string description, string group = "default");
         bool AddInt32(string uniqueName, Int32 value, string description, string group = "default");
@@ -61,5 +64,20 @@ namespace SimpleSettingsManager.Mode
         bool DeleteString(string uniqueName);
         bool DeleteByteArray(string uniqueName);
         bool DeleteBoolean(string uniqueName);
+
+        DataEntry[] GetAllInt16();
+        DataEntry[] GetAllInt32();
+        DataEntry[] GetAllInt();
+        DataEntry[] GetAllInt64();
+        DataEntry[] GetAllLong();
+        DataEntry[] GetAllFloat();
+        DataEntry[] GetAllDouble();
+        DataEntry[] GetAllString();
+        DataEntry[] GetAllByteArrays();
+        DataEntry[] GetAllBooleans();
+
+        DataEntry[] GetAllTypes();
+
+        void ImportDataEntry(DataEntry dataEntry);
     }
 }

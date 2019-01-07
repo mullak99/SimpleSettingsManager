@@ -1,14 +1,14 @@
-﻿using System;
+﻿using SimpleSettingsManager.Data;
+using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Text;
 
 namespace SimpleSettingsManager.Mode
 {
     internal class SQLite : IMode
     {
-        private const string _ssmFormatVer = "1.0";
-        private const string _minSsmFormatVer = "1.0";
-
         private SQLiteConnection _dbConnection;
         private string _settingsPath;
 
@@ -27,15 +27,16 @@ namespace SimpleSettingsManager.Mode
             {
                 CreateMetaTable();
 
-                AddMetaData("SSM_CreationAppVersion", "HistoricalInfo", Utilities.GetVersion(), "The version of SSM used to create the database.");
-                AddMetaData("SSM_LastAccessAppVersion", "LastAccessInfo", Utilities.GetVersion(), "The version of SSM used to last edit the database.");
-                AddMetaData("SSM_CreationFormatVersion", "HistoricalInfo", _ssmFormatVer, "The original SSM Format version of the database.");
-                AddMetaData("SSM_LastAccessFormatVersion", "LastAccessInfo", _ssmFormatVer, "The current SSM Format version of the database.");
+                AddMetaData("SSM_CreationAppVersion", "HistoricalInfo", SSM.GetVersion(), "The version of SSM used to create the database.");
+                AddMetaData("SSM_LastAccessAppVersion", "LastAccessInfo", SSM.GetVersion(), "The version of SSM used to last edit the database.");
+                AddMetaData("SSM_CreationFormatVersion", "HistoricalInfo", SSM.GetSsmFormatVersion(), "The original SSM Format version of the database.");
+                AddMetaData("SSM_LastAccessFormatVersion", "LastAccessInfo", SSM.GetSsmFormatVersion(), "The current SSM Format version of the database.");
                 AddMetaData("SSM_CreationTimestamp", "HistoricalInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the database was created.");
                 AddMetaData("SSM_LastLoadedTimestamp", "LastAccessInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the database was last loaded.");
             }
             else
             {
+                SetMetaData("SSM_LastAccessFormatVersion", SSM.GetSsmFormatVersion());
                 SetMetaData("SSM_LastLoadedTimestamp", Convert.ToString(IntUtilities.GetUnixTimestamp()));
             }
         }
@@ -392,6 +393,202 @@ namespace SimpleSettingsManager.Mode
                 return true;
             }
             return false;
+        }
+
+        #endregion
+
+        #region DataEntry
+
+        public void ImportDataEntry(DataEntry dataEntry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllInt16()
+        {
+            if(DoesTableExist("Int16"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM Int16", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(Int16), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToInt16(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToInt16(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllInt32()
+        {
+            if (DoesTableExist("Int32"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM Int32", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(Int16), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToInt32(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToInt32(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllInt()
+        {
+            return GetAllInt32();
+        }
+
+        public DataEntry[] GetAllInt64()
+        {
+            if (DoesTableExist("Int64"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM Int64", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(Int64), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToInt64(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToInt64(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllLong()
+        {
+            return GetAllInt64();
+        }
+
+        public DataEntry[] GetAllFloat()
+        {
+            if (DoesTableExist("Float"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM Float", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(float), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToSingle(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToSingle(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllDouble()
+        {
+            if (DoesTableExist("Double"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM Double", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(Double), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToDouble(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToDouble(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllString()
+        {
+            if (DoesTableExist("String"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM String", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(String), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), Encoding.UTF8.GetBytes(Convert.ToString(reader["VariableValue"])), Encoding.UTF8.GetBytes(Convert.ToString(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllByteArrays()
+        {
+            if (DoesTableExist("ByteArray"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM ByteArray", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(byte[]), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), IntUtilities.ObjectToByteArray(reader["VariableValue"]), IntUtilities.ObjectToByteArray(reader["VariableDefault"]), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllBooleans()
+        {
+            if (DoesTableExist("Boolean"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM Boolean", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(Boolean), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToBoolean(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToBoolean(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllTypes()
+        {
+            List<DataEntry> dataList = new List<DataEntry>();
+
+            if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16());
+            if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32());
+            if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64());
+            if (this.GetAllFloat() != null) dataList.AddRange(this.GetAllFloat());
+            if (this.GetAllDouble() != null) dataList.AddRange(this.GetAllDouble());
+            if (this.GetAllString() != null) dataList.AddRange(this.GetAllString());
+            if (this.GetAllByteArrays() != null) dataList.AddRange(this.GetAllByteArrays());
+            if (this.GetAllBooleans() != null) dataList.AddRange(this.GetAllBooleans());
+
+            return dataList.ToArray();
+        }
+
+        #endregion
+
+        #region Mode
+
+        public string GetMode()
+        {
+            return "SQLite";
         }
 
         #endregion

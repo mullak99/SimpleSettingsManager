@@ -63,6 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DataEntry.cs" />
+    <Compile Include="Migration\CrossModeMigration.cs" />
+    <Compile Include="Migration\OldVersionMigration.cs" />
+    <Compile Include="Migration\XmlSettingsMigration.cs" />
     <Compile Include="Mode\IMode.cs" />
     <Compile Include="Mode\SQLite.cs" />
     <Compile Include="Mode\XML.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleSettingsManager.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -295,6 +296,90 @@ namespace SimpleSettingsManager.Mode
         {
             throw new NotImplementedException();
         }
+        #endregion
+
+        #region DataEntry
+
+        public void ImportDataEntry(DataEntry dataEntry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllInt16()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllInt32()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllInt()
+        {
+            return GetAllInt32();
+        }
+
+        public DataEntry[] GetAllInt64()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllLong()
+        {
+            return GetAllInt64();
+        }
+
+        public DataEntry[] GetAllFloat()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllDouble()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllString()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllByteArrays()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllBooleans()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataEntry[] GetAllTypes()
+        {
+            List<DataEntry> dataList = new List<DataEntry>();
+
+            if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16());
+            if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32());
+            if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64());
+            if (this.GetAllFloat() != null) dataList.AddRange(this.GetAllFloat());
+            if (this.GetAllDouble() != null) dataList.AddRange(this.GetAllDouble());
+            if (this.GetAllString() != null) dataList.AddRange(this.GetAllString());
+            if (this.GetAllByteArrays() != null) dataList.AddRange(this.GetAllByteArrays());
+            if (this.GetAllBooleans() != null) dataList.AddRange(this.GetAllBooleans());
+
+            return dataList.ToArray();
+        }
+
+        #endregion
+
+        #region Mode
+
+        public string GetMode()
+        {
+            return "XML";
+        }
+
         #endregion
 
         #region Raw XML Handling
