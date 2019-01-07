@@ -20,6 +20,11 @@ namespace SimpleSettingsManager
             _handler = _ssmFile._handler;
         }
 
+        public SSM_File GetSSMFile()
+        {
+            return _ssmFile;
+        }
+
         /// <summary>
         /// Used to get the current version of SSM
         /// </summary>
@@ -44,7 +49,7 @@ namespace SimpleSettingsManager
 
         public void Open()
         {
-            _handler.Open(_ssmFile.GetPath(true));
+            _handler.Open(_ssmFile);
         }
 
         public void Close()
@@ -327,35 +332,54 @@ namespace SimpleSettingsManager
         private Mode _mode;
         internal IMode _handler;
 
-        public SSM_File(string settingsPath)
+        public SSM_File(string settingsPath, Mode mode = Mode.Auto)
         {
             if (File.Exists(settingsPath))
             {
                 _settingsPath = settingsPath;
                 _mode = DetectMode();
             }
-            else throw new Exception("File not found");
+            else
+            {
+                _settingsPath = settingsPath;
+
+                if (mode == Mode.Auto) _mode = Mode.SQLite;
+                else _mode = mode;
+            }
+            SetHandler();
         }
 
         private Mode DetectMode()
         {
             if (Utilities.IsFileSQLiteDB(_settingsPath))
             {
-                _handler = new SQLite();
                 return Mode.SQLite;
             }
             else if (Utilities.IsFileXML(_settingsPath))
             {
-                _handler = new XML();
                 return Mode.XML;
             }
             else throw new FormatException("Unsupported file format");
+        }
+
+        private void SetHandler()
+        {
+            if (_mode == Mode.SQLite)
+                _handler = new SQLite();
+            else if (_mode == Mode.XML)
+                _handler = new XML();
         }
 
         public string GetPath(bool fullPath = false)
         {
             if (fullPath) return Path.GetFullPath(_settingsPath);
             else return _settingsPath;
+        }
+
+        public string GetFileName(bool includeExtension = true)
+        {
+            if (includeExtension) return Path.GetFileName(this.GetPath(true));
+            else return Path.GetFileNameWithoutExtension(this.GetPath(true));
         }
 
         public Mode GetMode()
@@ -365,6 +389,7 @@ namespace SimpleSettingsManager
 
         public enum Mode
         {
+            Auto,
             SQLite,
             XML
         };

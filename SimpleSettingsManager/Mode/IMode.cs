@@ -5,7 +5,7 @@ namespace SimpleSettingsManager.Mode
 {
     internal interface IMode
     {
-        void Open(string path);
+        void Open(SSM_File ssmFile);
         void Close();
 
         string GetMode();

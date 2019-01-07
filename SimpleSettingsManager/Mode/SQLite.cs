@@ -14,11 +14,11 @@ namespace SimpleSettingsManager.Mode
 
         #region Init
 
-        public void Open(string path)
+        public void Open(SSM_File ssmFile)
         {
-            _settingsPath = path;
+            _settingsPath = ssmFile.GetPath(true);
 
-            bool isNewDatabase = createSQLiFile(_settingsPath);
+            bool isNewDatabase = createSQLiFile();
 
             _dbConnection = new SQLiteConnection(String.Format("Data Source={0};Version=3;", _settingsPath));
             _dbConnection.Open();
@@ -27,12 +27,12 @@ namespace SimpleSettingsManager.Mode
             {
                 CreateMetaTable();
 
-                AddMetaData("SSM_CreationAppVersion", "HistoricalInfo", SSM.GetVersion(), "The version of SSM used to create the database.");
-                AddMetaData("SSM_LastAccessAppVersion", "LastAccessInfo", SSM.GetVersion(), "The version of SSM used to last edit the database.");
-                AddMetaData("SSM_CreationFormatVersion", "HistoricalInfo", SSM.GetSsmFormatVersion(), "The original SSM Format version of the database.");
-                AddMetaData("SSM_LastAccessFormatVersion", "LastAccessInfo", SSM.GetSsmFormatVersion(), "The current SSM Format version of the database.");
-                AddMetaData("SSM_CreationTimestamp", "HistoricalInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the database was created.");
-                AddMetaData("SSM_LastLoadedTimestamp", "LastAccessInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the database was last loaded.");
+                AddMetaData("SSM_CreationAppVersion", "HistoricalInfo", SSM.GetVersion(), "The version of SSM used to create the SSM file.");
+                AddMetaData("SSM_LastAccessAppVersion", "LastAccessInfo", SSM.GetVersion(), "The version of SSM used to last edit the SSM file.");
+                AddMetaData("SSM_CreationFormatVersion", "HistoricalInfo", SSM.GetSsmFormatVersion(), "The original SSM Format version of the SSM file.");
+                AddMetaData("SSM_LastAccessFormatVersion", "LastAccessInfo", SSM.GetSsmFormatVersion(), "The current SSM Format version of the SSM file.");
+                AddMetaData("SSM_CreationTimestamp", "HistoricalInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was created.");
+                AddMetaData("SSM_LastLoadedTimestamp", "LastAccessInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was last loaded.");
             }
             else
             {
@@ -46,11 +46,11 @@ namespace SimpleSettingsManager.Mode
             _dbConnection.Close();
         }
 
-        private bool createSQLiFile(string path)
+        private bool createSQLiFile()
         {
-            if (!File.Exists(path))
+            if (!File.Exists(_settingsPath))
             {
-                SQLiteConnection.CreateFile(path);
+                SQLiteConnection.CreateFile(_settingsPath);
                 return true;
             }
             return false;
