@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimpleSettingsManager.Migration
 {
-    class XmlSettingsMigration
+    public class XmlSettingsMigration
     {
     }
 }

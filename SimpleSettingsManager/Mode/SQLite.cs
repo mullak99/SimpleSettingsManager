@@ -75,20 +75,28 @@ namespace SimpleSettingsManager.Mode
             return AddVarToTable(uniqueName, value, description, group, "Int32");
         }
 
-        public bool AddInt(string uniqueName, int value, string description, string group = "default")
-        {
-            return AddInt32(uniqueName, value, description, group);
-        }
-
         public bool AddInt64(string uniqueName, Int64 value, string description, string group = "default")
         {
             CreateInt64Table();
             return AddVarToTable(uniqueName, value, description, group, "Int64");
         }
 
-        public bool AddLong(string uniqueName, long value, string description, string group = "default")
+        public bool AddUInt16(string uniqueName, UInt16 value, string description, string group = "default")
         {
-            return AddInt64(uniqueName, value, description, group);
+            CreateUInt16Table();
+            return AddVarToTable(uniqueName, value, description, group, "UInt16");
+        }
+
+        public bool AddUInt32(string uniqueName, UInt32 value, string description, string group = "default")
+        {
+            CreateUInt32Table();
+            return AddVarToTable(uniqueName, value, description, group, "UInt32");
+        }
+
+        public bool AddUInt64(string uniqueName, UInt64 value, string description, string group = "default")
+        {
+            CreateUInt64Table();
+            return AddVarToTable(uniqueName, value, description, group, "UInt64");
         }
 
         public bool AddFloat(string uniqueName, float value, string description, string group = "default")
@@ -134,19 +142,24 @@ namespace SimpleSettingsManager.Mode
             return SetVarInTable(uniqueName, value, "Int32");
         }
 
-        public bool SetInt(string uniqueName, int value)
-        {
-            return SetInt32(uniqueName, value);
-        }
-
         public bool SetInt64(string uniqueName, Int64 value)
         {
             return SetVarInTable(uniqueName, value, "Int64");
         }
 
-        public bool SetLong(string uniqueName, long value)
+        public bool SetUInt16(string uniqueName, UInt16 value)
         {
-            return SetInt64(uniqueName, value);
+            return SetVarInTable(uniqueName, value, "UInt16");
+        }
+
+        public bool SetUInt32(string uniqueName, UInt32 value)
+        {
+            return SetVarInTable(uniqueName, value, "UInt32");
+        }
+
+        public bool SetUInt64(string uniqueName, UInt64 value)
+        {
+            return SetVarInTable(uniqueName, value, "UInt64");
         }
 
         public bool SetFloat(string uniqueName, float value)
@@ -187,19 +200,24 @@ namespace SimpleSettingsManager.Mode
             return EditVarInTable(uniqueName, description, group, "Int32");
         }
 
-        public bool EditInt(string uniqueName, string description, string group)
-        {
-            return EditInt32(uniqueName, description, group);
-        }
-
         public bool EditInt64(string uniqueName, string description, string group)
         {
             return EditVarInTable(uniqueName, description, group, "Int64");
         }
 
-        public bool EditLong(string uniqueName, string description, string group)
+        public bool EditUInt16(string uniqueName, string description, string group)
         {
-            return EditInt64(uniqueName, description, group);
+            return EditVarInTable(uniqueName, description, group, "UInt16");
+        }
+
+        public bool EditUInt32(string uniqueName, string description, string group)
+        {
+            return EditVarInTable(uniqueName, description, group, "UInt32");
+        }
+
+        public bool EditUInt64(string uniqueName, string description, string group)
+        {
+            return EditVarInTable(uniqueName, description, group, "UInt64");
         }
 
         public bool EditFloat(string uniqueName, string description, string group)
@@ -240,19 +258,24 @@ namespace SimpleSettingsManager.Mode
             return Convert.ToInt32(GetVarInTable(uniqueName, "Int32"));
         }
 
-        public int GetInt(string uniqueName)
-        {
-            return GetInt32(uniqueName);
-        }
-
         public Int64 GetInt64(string uniqueName)
         {
             return Convert.ToInt64(GetVarInTable(uniqueName, "Int64"));
         }
 
-        public long GetLong(string uniqueName)
+        public UInt16 GetUInt16(string uniqueName)
         {
-            return GetInt64(uniqueName);
+            return Convert.ToUInt16(GetVarInTable(uniqueName, "UInt16"));
+        }
+
+        public UInt32 GetUInt32(string uniqueName)
+        {
+            return Convert.ToUInt32(GetVarInTable(uniqueName, "UInt32"));
+        }
+
+        public UInt64 GetUInt64(string uniqueName)
+        {
+            return Convert.ToUInt64(GetVarInTable(uniqueName, "UInt64"));
         }
 
         public float GetFloat(string uniqueName)
@@ -293,19 +316,24 @@ namespace SimpleSettingsManager.Mode
             return DeleteVarInTable(uniqueName, "Int32");
         }
 
-        public bool DeleteInt(string uniqueName)
-        {
-            return DeleteInt32(uniqueName);
-        }
-
         public bool DeleteInt64(string uniqueName)
         {
             return DeleteVarInTable(uniqueName, "Int64");
         }
 
-        public bool DeleteLong(string uniqueName)
+        public bool DeleteUInt16(string uniqueName)
         {
-            return DeleteInt64(uniqueName);
+            return DeleteVarInTable(uniqueName, "UInt16");
+        }
+
+        public bool DeleteUInt32(string uniqueName)
+        {
+            return DeleteVarInTable(uniqueName, "UInt32");
+        }
+
+        public bool DeleteUInt64(string uniqueName)
+        {
+            return DeleteVarInTable(uniqueName, "UInt64");
         }
 
         public bool DeleteFloat(string uniqueName)
@@ -414,11 +442,13 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetMetaData(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()));
                     EditMetaData(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    
                 }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "_MetaData");
             }
             else if (dataEntry.GetVariableType() == typeof(Int16))
             {
-                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "Int16"))
                 {
                     AddInt16(dataEntry.GetVariableName(), BitConverter.ToInt16(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
@@ -427,10 +457,11 @@ namespace SimpleSettingsManager.Mode
                     SetInt16(dataEntry.GetVariableName(), BitConverter.ToInt16(dataEntry.GetVariableValue(), 0));
                     EditInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "Int16");
             }
             else if (dataEntry.GetVariableType() == typeof(Int32))
             {
-                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "Int32"))
                 {
                     AddInt32(dataEntry.GetVariableName(), BitConverter.ToInt32(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
@@ -439,10 +470,11 @@ namespace SimpleSettingsManager.Mode
                     SetInt32(dataEntry.GetVariableName(), BitConverter.ToInt32(dataEntry.GetVariableValue(), 0));
                     EditInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "Int32");
             }
             else if (dataEntry.GetVariableType() == typeof(Int64))
             {
-                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "Int64"))
                 {
                     AddInt64(dataEntry.GetVariableName(), BitConverter.ToInt64(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
@@ -451,10 +483,50 @@ namespace SimpleSettingsManager.Mode
                     SetInt64(dataEntry.GetVariableName(), BitConverter.ToInt64(dataEntry.GetVariableValue(), 0));
                     EditInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "Int64");
+            }
+            else if (dataEntry.GetVariableType() == typeof(UInt16))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "UInt16"))
+                {
+                    AddUInt16(dataEntry.GetVariableName(), BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetUInt16(dataEntry.GetVariableName(), BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0));
+                    EditUInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "UInt16");
+            }
+            else if (dataEntry.GetVariableType() == typeof(UInt32))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "UInt32"))
+                {
+                    AddUInt32(dataEntry.GetVariableName(), BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetUInt32(dataEntry.GetVariableName(), BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0));
+                    EditUInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "UInt32");
+            }
+            else if (dataEntry.GetVariableType() == typeof(UInt64))
+            {
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "UInt64"))
+                {
+                    AddUInt64(dataEntry.GetVariableName(), BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                else
+                {
+                    SetUInt64(dataEntry.GetVariableName(), BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0));
+                    EditUInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "UInt64");
             }
             else if (dataEntry.GetVariableType() == typeof(float))
             {
-                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "Float"))
                 {
                     AddFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
@@ -463,10 +535,11 @@ namespace SimpleSettingsManager.Mode
                     SetFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0));
                     EditFloat(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "Float");
             }
             else if (dataEntry.GetVariableType() == typeof(Double))
             {
-                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "Double"))
                 {
                     AddDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
@@ -475,10 +548,11 @@ namespace SimpleSettingsManager.Mode
                     SetDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0));
                     EditDouble(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "Double");
             }
             else if (dataEntry.GetVariableType() == typeof(String))
             {
-                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "String"))
                 {
                     AddString(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
@@ -487,10 +561,11 @@ namespace SimpleSettingsManager.Mode
                     SetString(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()));
                     EditString(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "String");
             }
             else if (dataEntry.GetVariableType() == typeof(byte[]))
             {
-                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "ByteArray"))
                 {
                     AddByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableValue(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
@@ -499,10 +574,11 @@ namespace SimpleSettingsManager.Mode
                     SetByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableValue());
                     EditByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "ByteArray");
             }
             else if (dataEntry.GetVariableType() == typeof(Boolean))
             {
-                if (!DoesVariableExist(dataEntry.GetVariableName()))
+                if (!DoesVariableExist(dataEntry.GetVariableName(), "Boolean"))
                 {
                     AddBoolean(dataEntry.GetVariableName(), BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
@@ -511,6 +587,7 @@ namespace SimpleSettingsManager.Mode
                     SetBoolean(dataEntry.GetVariableName(), BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0));
                     EditBoolean(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
+                EditVarDefaultInTable(dataEntry.GetVariableName(), dataEntry.GetVariableDefault(), "Boolean");
             }
         }
 
@@ -571,11 +648,6 @@ namespace SimpleSettingsManager.Mode
             return null;
         }
 
-        public DataEntry[] GetAllInt()
-        {
-            return GetAllInt32();
-        }
-
         public DataEntry[] GetAllInt64()
         {
             if (DoesTableExist("Int64"))
@@ -595,9 +667,61 @@ namespace SimpleSettingsManager.Mode
             return null;
         }
 
-        public DataEntry[] GetAllLong()
+        public DataEntry[] GetAllUInt16()
         {
-            return GetAllInt64();
+            if (DoesTableExist("UInt16"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM UInt16", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(UInt16), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToUInt16(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToUInt16(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllUInt32()
+        {
+            if (DoesTableExist("UInt32"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM UInt32", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(UInt16), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToUInt32(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToUInt32(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
+        }
+
+        public DataEntry[] GetAllUInt64()
+        {
+            if (DoesTableExist("UInt64"))
+            {
+                List<DataEntry> dataList = new List<DataEntry>();
+
+                SQLiteCommand command = new SQLiteCommand("SELECT VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc FROM UInt64", _dbConnection);
+
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataList.Add(new DataEntry(typeof(UInt64), Convert.ToString(reader["VariableName"]), Convert.ToString(reader["VariableGroup"]), BitConverter.GetBytes(Convert.ToUInt64(reader["VariableValue"])), BitConverter.GetBytes(Convert.ToUInt64(reader["VariableDefault"])), Convert.ToString(reader["VariableDesc"])));
+                }
+                return dataList.ToArray();
+            }
+            return null;
         }
 
         public DataEntry[] GetAllFloat()
@@ -703,6 +827,9 @@ namespace SimpleSettingsManager.Mode
             if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16());
             if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32());
             if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64());
+            if (this.GetAllUInt16() != null) dataList.AddRange(this.GetAllUInt16());
+            if (this.GetAllUInt32() != null) dataList.AddRange(this.GetAllUInt32());
+            if (this.GetAllUInt64() != null) dataList.AddRange(this.GetAllUInt64());
             if (this.GetAllFloat() != null) dataList.AddRange(this.GetAllFloat());
             if (this.GetAllDouble() != null) dataList.AddRange(this.GetAllDouble());
             if (this.GetAllString() != null) dataList.AddRange(this.GetAllString());
@@ -727,7 +854,7 @@ namespace SimpleSettingsManager.Mode
 
         private bool AddVarToTable(string uniqueName, object value, string description, string group, string table)
         {
-            if (!DoesVariableExist(uniqueName))
+            if (!DoesVariableExist(uniqueName, table))
             {
                 SQLiteCommand command = new SQLiteCommand("INSERT INTO " + IntUtilities.SqlEscape(table) + " (VariableName, VariableGroup, VariableValue, VariableDefault, VariableDesc) VALUES (@varName, @varGroup, @varValue, @varValue, @varDesc)", _dbConnection);
 
@@ -744,7 +871,7 @@ namespace SimpleSettingsManager.Mode
 
         private bool SetVarInTable(string uniqueName, object value, string table)
         {
-            if (DoesVariableExist(uniqueName))
+            if (DoesVariableExist(uniqueName, table))
             {
                 SQLiteCommand command = new SQLiteCommand("UPDATE " + IntUtilities.SqlEscape(table) + " SET VariableValue = @varValue WHERE VariableName = @varName", _dbConnection);
 
@@ -759,7 +886,7 @@ namespace SimpleSettingsManager.Mode
 
         private bool EditVarInTable(string uniqueName, string description, string group, string table)
         {
-            if (DoesVariableExist(uniqueName))
+            if (DoesVariableExist(uniqueName, table))
             {
                 SQLiteCommand command = new SQLiteCommand("UPDATE " + IntUtilities.SqlEscape(table) + " VariableGroup = @varGroup, VariableDesc = @varDesc WHERE VariableName = @varName", _dbConnection);
 
@@ -775,7 +902,7 @@ namespace SimpleSettingsManager.Mode
 
         private object GetVarInTable(string uniqueName, string table)
         {
-            if (DoesVariableExist(uniqueName))
+            if (DoesVariableExist(uniqueName, table))
             {
                 SQLiteCommand command = new SQLiteCommand("SELECT VariableValue FROM " + IntUtilities.SqlEscape(table) + " WHERE VariableName = @varName", _dbConnection);
 
@@ -794,11 +921,26 @@ namespace SimpleSettingsManager.Mode
 
         private bool DeleteVarInTable(string uniqueName, string table)
         {
-            if (DoesVariableExist(uniqueName))
+            if (DoesVariableExist(uniqueName, table))
             {
                 SQLiteCommand command = new SQLiteCommand("DELETE FROM " + IntUtilities.SqlEscape(table) + " WHERE VariableName = @varName", _dbConnection);
 
                 command.Parameters.AddWithValue("@varName", uniqueName);
+                command.ExecuteNonQuery();
+
+                return true;
+            }
+            return false;
+        }
+
+        private bool EditVarDefaultInTable(string uniqueName, object defaultValue, string table)
+        {
+            if (DoesVariableExist(uniqueName, table))
+            {
+                SQLiteCommand command = new SQLiteCommand("UPDATE " + IntUtilities.SqlEscape(table) + " SET VariableDefault = @varValue WHERE VariableName = @varName", _dbConnection);
+
+                command.Parameters.AddWithValue("@varName", uniqueName);
+                command.Parameters.AddWithValue("@varValue", defaultValue);
                 command.ExecuteNonQuery();
 
                 return true;
@@ -820,24 +962,18 @@ namespace SimpleSettingsManager.Mode
             return false;
         }
 
-        private bool DoesVariableExist(string uniqueName)
+        private bool DoesVariableExist(string uniqueName, string table)
         {
-            string[] tables = new string[] { "Int16", "Int32", "Int64", "Float", "Double", "String", "ByteArray", "Boolean" };
-
-            foreach (string table in tables)
+            if (DoesTableExist(table))
             {
-                if (DoesTableExist(table))
-                {
-                    SQLiteCommand command = new SQLiteCommand("SELECT COUNT(1) FROM " + IntUtilities.SqlEscape(table) + " WHERE VariableName = @varName", _dbConnection);
-                    command.Parameters.AddWithValue("@varName", uniqueName);
+                SQLiteCommand command = new SQLiteCommand("SELECT COUNT(1) FROM " + IntUtilities.SqlEscape(table) + " WHERE VariableName = @varName", _dbConnection);
+                command.Parameters.AddWithValue("@varName", uniqueName);
 
-                    Object o = command.ExecuteScalar();
-                    int count = Convert.ToInt32(o);
+                Object o = command.ExecuteScalar();
+                int count = Convert.ToInt32(o);
 
-                    if (count > 0)
-                        return true;
-                }
-                else continue;
+                if (count > 0)
+                    return true;
             }
             return false;
         }
@@ -881,6 +1017,24 @@ namespace SimpleSettingsManager.Mode
         private void CreateInt64Table()
         {
             SQLiteCommand command = new SQLiteCommand("CREATE TABLE IF NOT EXISTS Int64 (VariableName VARCHAR(255), VariableGroup VARCHAR(255), VariableValue BIGINT, VariableDefault BIGINT, VariableDesc VARCHAR(255))", _dbConnection);
+            command.ExecuteNonQuery();
+        }
+
+        private void CreateUInt16Table()
+        {
+            SQLiteCommand command = new SQLiteCommand("CREATE TABLE IF NOT EXISTS UInt16 (VariableName VARCHAR(255), VariableGroup VARCHAR(255), VariableValue SMALLINT UNSIGNED, VariableDefault SMALLINT UNSIGNED, VariableDesc VARCHAR(255))", _dbConnection);
+            command.ExecuteNonQuery();
+        }
+
+        private void CreateUInt32Table()
+        {
+            SQLiteCommand command = new SQLiteCommand("CREATE TABLE IF NOT EXISTS UInt32 (VariableName VARCHAR(255), VariableGroup VARCHAR(255), VariableValue INT UNSIGNED, VariableDefault INT UNSIGNED, VariableDesc VARCHAR(255))", _dbConnection);
+            command.ExecuteNonQuery();
+        }
+
+        private void CreateUInt64Table()
+        {
+            SQLiteCommand command = new SQLiteCommand("CREATE TABLE IF NOT EXISTS UInt64 (VariableName VARCHAR(255), VariableGroup VARCHAR(255), VariableValue BIGINT UNSIGNED, VariableDefault BIGINT UNSIGNED, VariableDesc VARCHAR(255))", _dbConnection);
             command.ExecuteNonQuery();
         }
 

@@ -67,6 +67,11 @@ namespace SimpleSettingsManager
             return _handler.AddInt16(uniqueName, value, description, group);
         }
 
+        public bool AddShort(string uniqueName, short value, string description, string group = "default")
+        {
+            return AddInt16(uniqueName, value, description, group);
+        }
+
         public bool AddInt32(string uniqueName, Int32 value, string description, string group = "default")
         {
             return _handler.AddInt32(uniqueName, value, description, group);
@@ -85,6 +90,21 @@ namespace SimpleSettingsManager
         public bool AddLong(string uniqueName, long value, string description, string group = "default")
         {
             return AddInt64(uniqueName, value, description, group);
+        }
+
+        public bool AddUInt16(string uniqueName, UInt16 value, string description, string group = "default")
+        {
+            return _handler.AddUInt16(uniqueName, value, description, group);
+        }
+
+        public bool AddUInt32(string uniqueName, UInt32 value, string description, string group = "default")
+        {
+            return _handler.AddUInt32(uniqueName, value, description, group);
+        }
+
+        public bool AddUInt64(string uniqueName, UInt64 value, string description, string group = "default")
+        {
+            return _handler.AddUInt64(uniqueName, value, description, group);
         }
 
         public bool AddFloat(string uniqueName, float value, string description, string group = "default")
@@ -120,6 +140,11 @@ namespace SimpleSettingsManager
             return _handler.SetInt16(uniqueName, value);
         }
 
+        public bool SetShort(string uniqueName, short value)
+        {
+            return SetInt16(uniqueName, value);
+        }
+
         public bool SetInt32(string uniqueName, Int32 value)
         {
             return _handler.SetInt32(uniqueName, value);
@@ -138,6 +163,21 @@ namespace SimpleSettingsManager
         public bool SetLong(string uniqueName, long value)
         {
             return SetInt64(uniqueName, value);
+        }
+
+        public bool SetUInt16(string uniqueName, UInt16 value)
+        {
+            return _handler.SetUInt16(uniqueName, value);
+        }
+
+        public bool SetUInt32(string uniqueName, UInt32 value)
+        {
+            return _handler.SetUInt32(uniqueName, value);
+        }
+
+        public bool SetUInt64(string uniqueName, UInt64 value)
+        {
+            return _handler.SetUInt64(uniqueName, value);
         }
 
         public bool SetFloat(string uniqueName, float value)
@@ -173,6 +213,11 @@ namespace SimpleSettingsManager
             return _handler.EditInt16(uniqueName, description, group);
         }
 
+        public bool EditShort(string uniqueName, string description, string group)
+        {
+            return EditInt16(uniqueName, description, group);
+        }
+
         public bool EditInt32(string uniqueName, string description, string group)
         {
             return _handler.EditInt32(uniqueName, description, group);
@@ -191,6 +236,21 @@ namespace SimpleSettingsManager
         public bool EditLong(string uniqueName, string description, string group)
         {
             return EditInt64(uniqueName, description, group);
+        }
+
+        public bool EditUInt16(string uniqueName, string description, string group)
+        {
+            return _handler.EditUInt16(uniqueName, description, group);
+        }
+
+        public bool EditUInt32(string uniqueName, string description, string group)
+        {
+            return _handler.EditUInt32(uniqueName, description, group);
+        }
+
+        public bool EditUInt64(string uniqueName, string description, string group)
+        {
+            return _handler.EditUInt64(uniqueName, description, group);
         }
 
         public bool EditFloat(string uniqueName, string description, string group)
@@ -226,6 +286,11 @@ namespace SimpleSettingsManager
             return _handler.GetInt16(uniqueName);
         }
 
+        public short GetShort(string uniqueName)
+        {
+            return GetInt16(uniqueName);
+        }
+
         public Int32 GetInt32(string uniqueName)
         {
             return _handler.GetInt32(uniqueName);
@@ -244,6 +309,21 @@ namespace SimpleSettingsManager
         public long GetLong(string uniqueName)
         {
             return GetInt64(uniqueName);
+        }
+
+        public UInt16 GetUInt16(string uniqueName)
+        {
+            return _handler.GetUInt16(uniqueName);
+        }
+
+        public UInt32 GetUInt32(string uniqueName)
+        {
+            return _handler.GetUInt32(uniqueName);
+        }
+
+        public UInt64 GetUInt64(string uniqueName)
+        {
+            return _handler.GetUInt64(uniqueName);
         }
 
         public float GetFloat(string uniqueName)
@@ -279,6 +359,11 @@ namespace SimpleSettingsManager
             return _handler.DeleteInt16(uniqueName);
         }
 
+        public bool DeleteShort(string uniqueName)
+        {
+            return DeleteInt16(uniqueName);
+        }
+
         public bool DeleteInt32(string uniqueName)
         {
             return _handler.DeleteInt32(uniqueName);
@@ -297,6 +382,21 @@ namespace SimpleSettingsManager
         public bool DeleteLong(string uniqueName)
         {
             return DeleteInt64(uniqueName);
+        }
+
+        public bool DeleteUInt16(string uniqueName)
+        {
+            return _handler.DeleteUInt16(uniqueName);
+        }
+
+        public bool DeleteUInt32(string uniqueName)
+        {
+            return _handler.DeleteUInt32(uniqueName);
+        }
+
+        public bool DeleteUInt64(string uniqueName)
+        {
+            return _handler.DeleteUInt64(uniqueName);
         }
 
         public bool DeleteFloat(string uniqueName)
@@ -337,42 +437,72 @@ namespace SimpleSettingsManager
         {
             return _handler.GetAllMetaData();
         }
+
         public DataEntry[] GetAllInt16()
         {
             return _handler.GetAllInt16();
         }
+
+        public DataEntry[] GetAllShort()
+        {
+            return GetAllShort();
+        }
+
         public DataEntry[] GetAllInt32()
         {
             return _handler.GetAllInt32();
         }
+
         public DataEntry[] GetAllInt()
         {
-            return _handler.GetAllInt();
+            return GetAllInt32();
         }
+
         public DataEntry[] GetAllInt64()
         {
             return _handler.GetAllInt64();
         }
+
         public DataEntry[] GetAllLong()
         {
-            return _handler.GetAllLong();
+            return GetAllInt64();
         }
+
+        public DataEntry[] GetAllUInt16()
+        {
+            return _handler.GetAllUInt16();
+        }
+
+        public DataEntry[] GetAllUInt32()
+        {
+            return _handler.GetAllUInt32();
+        }
+
+        public DataEntry[] GetAllUInt64()
+        {
+            return _handler.GetAllUInt64();
+        }
+
         public DataEntry[] GetAllFloat()
         {
             return _handler.GetAllFloat();
         }
+
         public DataEntry[] GetAllDouble()
         {
             return _handler.GetAllDouble();
         }
+
         public DataEntry[] GetAllString()
         {
             return _handler.GetAllString();
         }
+
         public DataEntry[] GetAllByteArrays()
         {
             return _handler.GetAllByteArrays();
         }
+
         public DataEntry[] GetAllBooleans()
         {
             return _handler.GetAllBooleans();

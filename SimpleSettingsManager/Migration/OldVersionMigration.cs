@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimpleSettingsManager.Migration
 {
-    class OldVersionMigration
+    public class OldVersionMigration
     {
     }
 }

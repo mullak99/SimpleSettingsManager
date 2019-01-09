@@ -12,9 +12,10 @@ namespace SimpleSettingsManager.Mode
 
         bool AddInt16(string uniqueName, Int16 value, string description, string group = "default");
         bool AddInt32(string uniqueName, Int32 value, string description, string group = "default");
-        bool AddInt(string uniqueName, int value, string description, string group = "default");
         bool AddInt64(string uniqueName, Int64 value, string description, string group = "default");
-        bool AddLong(string uniqueName, long value, string description, string group = "default");
+        bool AddUInt16(string uniqueName, UInt16 value, string description, string group = "default");
+        bool AddUInt32(string uniqueName, UInt32 value, string description, string group = "default");
+        bool AddUInt64(string uniqueName, UInt64 value, string description, string group = "default");
         bool AddFloat(string uniqueName, float value, string description, string group = "default");
         bool AddDouble(string uniqueName, double value, string description, string group = "default");
         bool AddString(string uniqueName, string value, string description, string group = "default");
@@ -23,9 +24,10 @@ namespace SimpleSettingsManager.Mode
 
         bool SetInt16(string uniqueName, Int16 value);
         bool SetInt32(string uniqueName, Int32 value);
-        bool SetInt(string uniqueName, int value);
         bool SetInt64(string uniqueName, Int64 value);
-        bool SetLong(string uniqueName, long value);
+        bool SetUInt16(string uniqueName, UInt16 value);
+        bool SetUInt32(string uniqueName, UInt32 value);
+        bool SetUInt64(string uniqueName, UInt64 value);
         bool SetFloat(string uniqueName, float value);
         bool SetDouble(string uniqueName, double value);
         bool SetString(string uniqueName, string value);
@@ -34,9 +36,10 @@ namespace SimpleSettingsManager.Mode
 
         bool EditInt16(string uniqueName, string description, string group);
         bool EditInt32(string uniqueName, string description, string group);
-        bool EditInt(string uniqueName, string description, string group);
         bool EditInt64(string uniqueName, string description, string group);
-        bool EditLong(string uniqueName, string description, string group);
+        bool EditUInt16(string uniqueName, string description, string group);
+        bool EditUInt32(string uniqueName, string description, string group);
+        bool EditUInt64(string uniqueName, string description, string group);
         bool EditFloat(string uniqueName, string description, string group);
         bool EditDouble(string uniqueName, string description, string group);
         bool EditString(string uniqueName, string description, string group);
@@ -45,9 +48,10 @@ namespace SimpleSettingsManager.Mode
 
         Int16 GetInt16(string uniqueName);
         Int32 GetInt32(string uniqueName);
-        int GetInt(string uniqueName);
         Int64 GetInt64(string uniqueName);
-        long GetLong(string uniqueName);
+        UInt16 GetUInt16(string uniqueName);
+        UInt32 GetUInt32(string uniqueName);
+        UInt64 GetUInt64(string uniqueName);
         float GetFloat(string uniqueName);
         double GetDouble(string uniqueName);
         string GetString(string uniqueName);
@@ -56,9 +60,10 @@ namespace SimpleSettingsManager.Mode
 
         bool DeleteInt16(string uniqueName);
         bool DeleteInt32(string uniqueName);
-        bool DeleteInt(string uniqueName);
         bool DeleteInt64(string uniqueName);
-        bool DeleteLong(string uniqueName);
+        bool DeleteUInt16(string uniqueName);
+        bool DeleteUInt32(string uniqueName);
+        bool DeleteUInt64(string uniqueName);
         bool DeleteFloat(string uniqueName);
         bool DeleteDouble(string uniqueName);
         bool DeleteString(string uniqueName);
@@ -68,9 +73,10 @@ namespace SimpleSettingsManager.Mode
         DataEntry[] GetAllMetaData();
         DataEntry[] GetAllInt16();
         DataEntry[] GetAllInt32();
-        DataEntry[] GetAllInt();
         DataEntry[] GetAllInt64();
-        DataEntry[] GetAllLong();
+        DataEntry[] GetAllUInt16();
+        DataEntry[] GetAllUInt32();
+        DataEntry[] GetAllUInt64();
         DataEntry[] GetAllFloat();
         DataEntry[] GetAllDouble();
         DataEntry[] GetAllString();
