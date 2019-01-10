@@ -30,6 +30,8 @@ namespace SimpleSettingsManager.Migration
 
             importSsm.Close();
 
+            exportSsm.UpdateMigrationStatus();
+
             foreach (DataEntry data in dataEntries)
             {
                 Console.WriteLine("Importing '{0}'", data.GetVariableName());

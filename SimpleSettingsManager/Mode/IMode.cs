@@ -86,5 +86,7 @@ namespace SimpleSettingsManager.Mode
         DataEntry[] GetAllTypes();
 
         void ImportDataEntry(DataEntry dataEntry);
+
+        void UpdateMigrationStatus();
     }
 }

@@ -58,6 +58,11 @@ namespace SimpleSettingsManager
             _handler.Close();
         }
 
+        internal void UpdateMigrationStatus()
+        {
+            _handler.UpdateMigrationStatus();
+        }
+
         #endregion
 
         #region Add Variables

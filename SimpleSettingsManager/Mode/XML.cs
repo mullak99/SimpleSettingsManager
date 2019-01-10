@@ -27,28 +27,46 @@ namespace SimpleSettingsManager.Mode
 
             bool isNewDatabase = CreateXmlFile();
 
-            if (isNewDatabase)
-            {
-                AddMetaData("SSM_CreationAppVersion", "HistoricalInfo", SSM.GetVersion(), "The version of SSM used to create the SSM file.");
-                AddMetaData("SSM_LastAccessAppVersion", "LastAccessInfo", SSM.GetVersion(), "The version of SSM used to last edit the SSM file.");
-                AddMetaData("SSM_CreationFormatVersion", "HistoricalInfo", SSM.GetSsmFormatVersion(), "The original SSM Format version of the SSM file.");
-                AddMetaData("SSM_LastAccessFormatVersion", "LastAccessInfo", SSM.GetSsmFormatVersion(), "The current SSM Format version of the SSM file.");
-                AddMetaData("SSM_CreationTimestamp", "HistoricalInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was created.");
-                AddMetaData("SSM_LastLoadedTimestamp", "LastAccessInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was last loaded.");
-                AddMetaData("SSM_CreationMode", "HistoricalInfo", "XML", "The SSM mode used to create the SSM file.");
-                AddMetaData("SSM_LastAccessMode", "LastAccessInfo", "XML", "The SSM mode used to last access the SSM file.");
-            }
-            else
-            {
-                SetMetaData("SSM_LastAccessFormatVersion", SSM.GetSsmFormatVersion());
-                SetMetaData("SSM_LastLoadedTimestamp", Convert.ToString(IntUtilities.GetUnixTimestamp()));
-                SetMetaData("SSM_LastAccessMode", "XML");
-            }
+            if (isNewDatabase) AddNewSsmMetaData();
+            else ExistingSsmMetaData();
+        }
+
+        private void AddNewSsmMetaData()
+        {
+            AddMetaData("SSM_CreationAppVersion", "HistoricalInfo", SSM.GetVersion(), "The version of SSM used to create the SSM file.");
+            AddMetaData("SSM_LastAccessAppVersion", "LastAccessInfo", SSM.GetVersion(), "The version of SSM used to last edit the SSM file.");
+            AddMetaData("SSM_CreationFormatVersion", "HistoricalInfo", SSM.GetSsmFormatVersion(), "The original SSM Format version of the SSM file.");
+            AddMetaData("SSM_LastAccessFormatVersion", "LastAccessInfo", SSM.GetSsmFormatVersion(), "The current SSM Format version of the SSM file.");
+            AddMetaData("SSM_CreationTimestamp", "HistoricalInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was created.");
+            AddMetaData("SSM_LastLoadedTimestamp", "LastAccessInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was last loaded.");
+            AddMetaData("SSM_CreationMode", "HistoricalInfo", "XML", "The SSM mode used to create the SSM file.");
+            AddMetaData("SSM_LastAccessMode", "LastAccessInfo", "XML", "The SSM mode used to last access the SSM file.");
+        }
+
+        private void ExistingSsmMetaData()
+        {
+            SetMetaData("SSM_LastAccessFormatVersion", SSM.GetSsmFormatVersion());
+            SetMetaData("SSM_LastLoadedTimestamp", Convert.ToString(IntUtilities.GetUnixTimestamp()));
+            SetMetaData("SSM_LastAccessMode", "XML");
         }
 
         public void Close()
         {
             SaveXML();
+        }
+
+        public void UpdateMigrationStatus()
+        {
+            if (!AddMetaData("SSM_LastMigration", "MigrationInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was last migrated."))
+                SetMetaData("SSM_LastMigration", Convert.ToString(IntUtilities.GetUnixTimestamp()));
+
+            if(!AddMetaData("SSM_MigrationCount", "MigrationInfo", "1", "The total number of migrations the SSM file has gone through."))
+            {
+                ulong totalMigrations = Convert.ToUInt64(GetRawXmlValue("SSM_MigrationCount", "_MetaData"));
+                totalMigrations++;
+                SetMetaData("SSM_MigrationCount", Convert.ToString(totalMigrations));
+            }
+            ExistingSsmMetaData();
         }
 
         public void SetAutoSave(bool autoSave)
@@ -92,15 +110,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "Boolean"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("Boolean");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("Boolean");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/Boolean/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -134,15 +152,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "ByteArray"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("ByteArray");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("ByteArray");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/ByteArray/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -176,15 +194,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "Double"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("Double");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("Double");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/Double/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -218,15 +236,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "Float"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("Float");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("Float");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/Float/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -260,15 +278,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "Int16"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("Int16");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("Int16");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/Int16/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -302,15 +320,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "Int32"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("Int32");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("Int32");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/Int32/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -344,15 +362,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "Int64"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("Int64");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("Int64");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/Int64/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -386,15 +404,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "UInt16"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("UInt16");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("UInt16");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/UInt16/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -428,15 +446,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "UInt32"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("UInt32");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("UInt32");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/UInt32/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -470,15 +488,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "UInt64"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("UInt64");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("UInt64");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/UInt64/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -512,15 +530,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesVariableExist(uniqueName, "String"))
             {
-                XmlNode metaDataNode = AddToHeadingNode("String");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("String");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/String/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -1054,15 +1072,15 @@ namespace SimpleSettingsManager.Mode
         {
             if (!DoesMetaDataVariableExist(varName))
             {
-                XmlNode metaDataNode = AddToHeadingNode("_MetaData");
-                _xmlDocBody.AppendChild(metaDataNode);
+                XmlNode headingNode = AddToHeadingNode("_MetaData");
+                _xmlDocBody.AppendChild(headingNode);
 
                 XmlNode groupNode;
 
                 if (_xmlDoc.SelectNodes(String.Format("//SSM/_MetaData/{0}", group)).Count == 0)
                 {
                     groupNode = _xmlDoc.CreateElement(group);
-                    metaDataNode.AppendChild(groupNode);
+                    headingNode.AppendChild(groupNode);
                 }
                 else
                 {
@@ -1075,14 +1093,10 @@ namespace SimpleSettingsManager.Mode
                 XmlNode varValueNode = _xmlDoc.CreateElement("value");
                 varValueNode.InnerText = varValue.ToString();
 
-                XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = varValue.ToString();
-
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
 
                 varNode.AppendChild(varValueNode);
-                varNode.AppendChild(defaultValueNode);
                 varNode.AppendChild(varDescNode);
 
                 if (_autoSave) SaveXML();
@@ -1109,7 +1123,16 @@ namespace SimpleSettingsManager.Mode
 
         public bool EditMetaData(string varName, string description, string group)
         {
-            throw new NotImplementedException();
+            if (DoesVariableExist(varName, "_MetaData"))
+            {
+                EditVarDesc(varName, description, "_MetaData");
+
+                if (GetVarGroup(varName, "_MetaData") != group)
+                    MoveVarGroup(varName, group, "_MetaData");
+
+                return true;
+            }
+            return false;
         }
 
         public bool DeleteMetaData(string varName)
@@ -1134,7 +1157,6 @@ namespace SimpleSettingsManager.Mode
                     EditMetaData(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
 
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "_MetaData");
             }
             else if (dataEntry.GetVariableType() == typeof(Int16))
             {
@@ -1147,7 +1169,7 @@ namespace SimpleSettingsManager.Mode
                     SetInt16(dataEntry.GetVariableName(), BitConverter.ToInt16(dataEntry.GetVariableValue(), 0));
                     EditInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "Int16");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt16(dataEntry.GetVariableValue(), 0)), "Int16");
             }
             else if (dataEntry.GetVariableType() == typeof(Int32))
             {
@@ -1160,7 +1182,7 @@ namespace SimpleSettingsManager.Mode
                     SetInt32(dataEntry.GetVariableName(), BitConverter.ToInt32(dataEntry.GetVariableValue(), 0));
                     EditInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "Int32");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt32(dataEntry.GetVariableValue(), 0)), "Int32");
             }
             else if (dataEntry.GetVariableType() == typeof(Int64))
             {
@@ -1173,7 +1195,7 @@ namespace SimpleSettingsManager.Mode
                     SetInt64(dataEntry.GetVariableName(), BitConverter.ToInt64(dataEntry.GetVariableValue(), 0));
                     EditInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "Int64");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt64(dataEntry.GetVariableValue(), 0)), "Int64");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt16))
             {
@@ -1186,7 +1208,7 @@ namespace SimpleSettingsManager.Mode
                     SetUInt16(dataEntry.GetVariableName(), BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0));
                     EditUInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "UInt16");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0)), "UInt16");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt32))
             {
@@ -1199,7 +1221,7 @@ namespace SimpleSettingsManager.Mode
                     SetUInt32(dataEntry.GetVariableName(), BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0));
                     EditUInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "UInt32");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0)), "UInt32");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt64))
             {
@@ -1212,7 +1234,7 @@ namespace SimpleSettingsManager.Mode
                     SetUInt64(dataEntry.GetVariableName(), BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0));
                     EditUInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "UInt64");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0)), "UInt64");
             }
             else if (dataEntry.GetVariableType() == typeof(float))
             {
@@ -1225,7 +1247,7 @@ namespace SimpleSettingsManager.Mode
                     SetFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0));
                     EditFloat(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "Float");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToSingle(dataEntry.GetVariableValue(), 0)), "Float");
             }
             else if (dataEntry.GetVariableType() == typeof(Double))
             {
@@ -1238,7 +1260,7 @@ namespace SimpleSettingsManager.Mode
                     SetDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0));
                     EditDouble(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "Double");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToDouble(dataEntry.GetVariableValue(), 0)), "Double");
             }
             else if (dataEntry.GetVariableType() == typeof(String))
             {
@@ -1264,7 +1286,7 @@ namespace SimpleSettingsManager.Mode
                     SetByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableValue());
                     EditByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "ByteArray");
+                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()), "UInt64");
             }
             else if (dataEntry.GetVariableType() == typeof(Boolean))
             {
@@ -1277,7 +1299,7 @@ namespace SimpleSettingsManager.Mode
                     SetBoolean(dataEntry.GetVariableName(), BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0));
                     EditBoolean(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "Boolean");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0)), "Boolean");
             }
         }
 
@@ -1293,7 +1315,7 @@ namespace SimpleSettingsManager.Mode
                 {
                     for (int i = 0; i < xmlNodeGroup.ChildNodes.Count; i++)
                     {
-                        dataList.Add(new DataEntry(typeof(MetaDataObject), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText), Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("default").InnerText), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
+                        dataList.Add(new DataEntry(typeof(MetaDataObject), xmlNodeGroup.ChildNodes[i].Name, xmlNodeGroup.Name, Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText), Encoding.UTF8.GetBytes(xmlNodeGroup.ChildNodes[i].SelectSingleNode("value").InnerText), xmlNodeGroup.ChildNodes[i].SelectSingleNode("description").InnerText));
                     }
                 }
                 return dataList.ToArray();
@@ -1638,27 +1660,33 @@ namespace SimpleSettingsManager.Mode
                 DataEntry de;
 
                 string value = xmlNode.SelectSingleNode("value").InnerText;
-                string defVal = xmlNode.SelectSingleNode("default").InnerText;
                 string desc = xmlNode.SelectSingleNode("description").InnerText;
 
-                if (type == "Int16")
-                    de = new DataEntry(typeof(Int16), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
-                else if (type == "Int32")
-                    de = new DataEntry(typeof(Int32), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
-                else if (type == "Int64")
-                    de = new DataEntry(typeof(Int64), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
-                else if (type == "Float")
-                    de = new DataEntry(typeof(float), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
-                else if (type == "Double")
-                    de = new DataEntry(typeof(Double), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
-                else if (type == "String")
-                    de = new DataEntry(typeof(String), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
-                else if (type == "ByteArray")
-                    de = new DataEntry(typeof(byte[]), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
-                else if (type == "Boolean")
-                    de = new DataEntry(typeof(Boolean), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
+                if (type != "_MetaData")
+                {
+                    string defVal = xmlNode.SelectSingleNode("default").InnerText;
+
+                    if (type == "Int16")
+                        de = new DataEntry(typeof(Int16), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
+                    else if (type == "Int32")
+                        de = new DataEntry(typeof(Int32), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
+                    else if (type == "Int64")
+                        de = new DataEntry(typeof(Int64), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
+                    else if (type == "Float")
+                        de = new DataEntry(typeof(float), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
+                    else if (type == "Double")
+                        de = new DataEntry(typeof(Double), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
+                    else if (type == "String")
+                        de = new DataEntry(typeof(String), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
+                    else if (type == "ByteArray")
+                        de = new DataEntry(typeof(byte[]), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
+                    else if (type == "Boolean")
+                        de = new DataEntry(typeof(Boolean), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
+                    else
+                        throw new Exception(String.Format("Unknown type '{0}'", type));
+                }
                 else
-                    throw new Exception(String.Format("Unknown type '{0}'", type));
+                    de = new DataEntry(typeof(MetaDataObject), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(value), desc);
 
                 RemoveXmlElement(uniqueName, type);
 
@@ -1711,6 +1739,15 @@ namespace SimpleSettingsManager.Mode
             {
                 return false;
             }
+        }
+
+        private string GetRawXmlValue(string varName, string type)
+        {
+            if (DoesVariableExist(varName, type))
+            {
+                return _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*/{1}", type, varName))[0].SelectNodes("value")[0].InnerText;
+            }
+            return null;
         }
 
         private void DeleteEmptyParents()
