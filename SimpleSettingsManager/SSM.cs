@@ -11,6 +11,9 @@ namespace SimpleSettingsManager
         private const string _ssmFormatVer = "1.0";
         private const string _minSsmFormatVer = "1.0";
 
+        private const bool IsPreReleaseBuild = true;
+        private const string PreReleaseTag = "DEV";
+
         private SSM_File _ssmFile;
 
         private IMode _handler;
@@ -33,7 +36,19 @@ namespace SimpleSettingsManager
         public static string GetVersion()
         {
             string[] ver = (typeof(SSM).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version).Split('.');
-            return "v" + ver[0] + "." + ver[1] + "." + ver[2];
+            if (!IsPreReleaseBuild)
+                return "v" + ver[0] + "." + ver[1] + "." + ver[2];
+            else
+                return "v" + ver[0] + "." + ver[1] + "." + ver[2] + "-" + PreReleaseTag;
+        }
+
+        /// <summary>
+        /// Gets if the current version of SSM is a Pre-Release version
+        /// </summary>
+        /// <returns>If the current SSM version is a Pre-Release build</returns>
+        public static bool IsPreReleaseVersion()
+        {
+            return IsPreReleaseBuild;
         }
 
         public static string GetSsmFormatVersion()

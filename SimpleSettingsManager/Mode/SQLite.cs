@@ -514,7 +514,7 @@ namespace SimpleSettingsManager.Mode
                     SetUInt16(dataEntry.GetVariableName(), BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0));
                     EditUInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefaultInTable(dataEntry.GetVariableName(), BitConverter.ToUInt16(dataEntry.GetVariableDefault(), 0), "UInt16");
+                EditVarDefaultInTable(dataEntry.GetVariableName(), BitConverter.GetBytes(BitConverter.ToUInt16(dataEntry.GetVariableDefault(), 0)), "UInt16");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt32))
             {
@@ -527,7 +527,7 @@ namespace SimpleSettingsManager.Mode
                     SetUInt32(dataEntry.GetVariableName(), BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0));
                     EditUInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefaultInTable(dataEntry.GetVariableName(), BitConverter.ToUInt32(dataEntry.GetVariableDefault(), 0), "UInt32");
+                EditVarDefaultInTable(dataEntry.GetVariableName(), BitConverter.GetBytes(BitConverter.ToUInt32(dataEntry.GetVariableDefault(), 0)), "UInt32");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt64))
             {
@@ -540,7 +540,7 @@ namespace SimpleSettingsManager.Mode
                     SetUInt64(dataEntry.GetVariableName(), BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0));
                     EditUInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefaultInTable(dataEntry.GetVariableName(), BitConverter.ToUInt64(dataEntry.GetVariableDefault(), 0), "UInt64");
+                EditVarDefaultInTable(dataEntry.GetVariableName(), BitConverter.GetBytes(BitConverter.ToUInt64(dataEntry.GetVariableDefault(), 0)), "UInt64");
             }
             else if (dataEntry.GetVariableType() == typeof(float))
             {

@@ -13,8 +13,12 @@ namespace SimpleSettingsManager.Migration
 
         public CrossModeMigration(SSM_File importSsmFile, SSM_File exportSsmFile)
         {
-            _importSsmFile = importSsmFile;
-            _exportSsmFile = exportSsmFile;
+            if (importSsmFile.GetMode() != exportSsmFile.GetMode())
+            {
+                _importSsmFile = importSsmFile;
+                _exportSsmFile = exportSsmFile;
+            }
+            else throw new Exception("Error: You can not migrate between the same SSM modes with CrossModeMigration!");
         }
 
         public void Migrate()
@@ -28,15 +32,14 @@ namespace SimpleSettingsManager.Migration
             DataEntry[] dataEntries = importSsm.GetAllTypes();
             Console.WriteLine("Total Entries: {0}", dataEntries.Length);
 
-            importSsm.Close();
-
-            exportSsm.UpdateMigrationStatus();
+            importSsm.Close();            
 
             foreach (DataEntry data in dataEntries)
             {
                 Console.WriteLine("Importing '{0}'", data.GetVariableName());
                 exportSsm.ImportDataEntry(data);
             }
+            exportSsm.UpdateMigrationStatus();
 
             exportSsm.Close();
         }

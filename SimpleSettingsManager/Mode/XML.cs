@@ -57,6 +57,8 @@ namespace SimpleSettingsManager.Mode
 
         public void UpdateMigrationStatus()
         {
+            LoadXML();
+
             if (!AddMetaData("SSM_LastMigration", "MigrationInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was last migrated."))
                 SetMetaData("SSM_LastMigration", Convert.ToString(IntUtilities.GetUnixTimestamp()));
 
@@ -67,6 +69,8 @@ namespace SimpleSettingsManager.Mode
                 SetMetaData("SSM_MigrationCount", Convert.ToString(totalMigrations));
             }
             ExistingSsmMetaData();
+
+            SaveXML();
         }
 
         public void SetAutoSave(bool autoSave)
