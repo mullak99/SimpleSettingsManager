@@ -12,7 +12,7 @@ namespace SimpleSettingsManager
         private const string _minSsmFormatVer = "1.0";
 
         private const bool IsPreReleaseBuild = true;
-        private const string PreReleaseTag = "DEV";
+        private const string PreReleaseTag = "DEV190424-1";
 
         private SSM_File _ssmFile;
 
@@ -35,11 +35,13 @@ namespace SimpleSettingsManager
         /// <returns>The version number of SSM.</returns>
         public static string GetVersion()
         {
+            #pragma warning disable CS0162 //Unreachable code detected
             string[] ver = (typeof(SSM).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version).Split('.');
             if (!IsPreReleaseBuild)
                 return "v" + ver[0] + "." + ver[1] + "." + ver[2];
             else
                 return "v" + ver[0] + "." + ver[1] + "." + ver[2] + "-" + PreReleaseTag;
+            #pragma warning restore CS0162 //Unreachable code detected
         }
 
         /// <summary>
@@ -590,6 +592,11 @@ namespace SimpleSettingsManager
         {
             if (includeExtension) return Path.GetFileName(this.GetPath(true));
             else return Path.GetFileNameWithoutExtension(this.GetPath(true));
+        }
+
+        public DateTime GetLastModified()
+        {
+            return File.GetLastWriteTimeUtc(GetPath());
         }
 
         public Mode GetMode()
