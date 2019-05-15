@@ -55,7 +55,7 @@ namespace SimpleSettingsManager.Mode
             _dbConnection.Close();
         }
 
-        public void UpdateMigrationStatus()
+        public void UpdateCrossModeMigrationStatus()
         {
             if (!AddMetaData("SSM_LastMigration", "MigrationInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the SSM file was last migrated."))
                 SetMetaData("SSM_LastMigration", Convert.ToString(IntUtilities.GetUnixTimestamp()));
@@ -66,6 +66,17 @@ namespace SimpleSettingsManager.Mode
                 totalMigrations++;
                 SetMetaData("SSM_MigrationCount", Convert.ToString(totalMigrations));
             }
+            ExistingSsmMetaData();
+        }
+
+        public void UpdateXmlSettingsMigrationStatus()
+        {
+            if (!AddMetaData("SSM_XmlSettingsMigration", "MigrationInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the XmlSettings file was migrated to SSM."))
+                SetMetaData("SSM_XmlSettingsMigration", Convert.ToString(IntUtilities.GetUnixTimestamp()));
+
+            if (!AddMetaData("SSM_XmlSettingsMigrationMode", "MigrationInfo", "SQLite", "The initial SSM mode the XmlSettings file was migrated to."))
+                SetMetaData("SSM_XmlSettingsMigrationMode", "SQLite");
+
             ExistingSsmMetaData();
         }
 

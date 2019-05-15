@@ -12,7 +12,7 @@ namespace SimpleSettingsManager
         private const string _minSsmFormatVer = "1.0";
 
         private const bool IsPreReleaseBuild = true;
-        private const string PreReleaseTag = "DEV190515-2";
+        private const string PreReleaseTag = "DEV190516-1";
 
         private SSM_File _ssmFile;
 
@@ -75,9 +75,14 @@ namespace SimpleSettingsManager
             _handler.Close();
         }
 
-        internal void UpdateMigrationStatus()
+        internal void UpdateCrossModeMigrationStatus()
         {
-            _handler.UpdateMigrationStatus();
+            _handler.UpdateCrossModeMigrationStatus();
+        }
+
+        internal void UpdateXmlSettingsMigrationStatus()
+        {
+            _handler.UpdateXmlSettingsMigrationStatus();
         }
 
         #endregion

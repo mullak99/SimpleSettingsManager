@@ -53,7 +53,7 @@ namespace SimpleSettingsManager.Mode
             SaveXML();
         }
 
-        public void UpdateMigrationStatus()
+        public void UpdateCrossModeMigrationStatus()
         {
             LoadXML();
 
@@ -66,6 +66,21 @@ namespace SimpleSettingsManager.Mode
                 totalMigrations++;
                 SetMetaData("SSM_MigrationCount", Convert.ToString(totalMigrations));
             }
+            ExistingSsmMetaData();
+
+            SaveXML();
+        }
+
+        public void UpdateXmlSettingsMigrationStatus()
+        {
+            LoadXML();
+
+            if (!AddMetaData("SSM_XmlSettingsMigration", "MigrationInfo", Convert.ToString(IntUtilities.GetUnixTimestamp()), "The timestamp of when the XmlSettings file was migrated to SSM."))
+                SetMetaData("SSM_XmlSettingsMigration", Convert.ToString(IntUtilities.GetUnixTimestamp()));
+
+            if (!AddMetaData("SSM_XmlSettingsMigrationMode", "MigrationInfo", "XML", "The initial SSM mode the XmlSettings file was migrated to."))
+                SetMetaData("SSM_XmlSettingsMigrationMode", "XML");
+
             ExistingSsmMetaData();
 
             SaveXML();

@@ -87,6 +87,7 @@ namespace SimpleSettingsManager.Mode
 
         void ImportDataEntry(DataEntry dataEntry);
 
-        void UpdateMigrationStatus();
+        void UpdateCrossModeMigrationStatus();
+        void UpdateXmlSettingsMigrationStatus();
     }
 }
