@@ -1212,7 +1212,6 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetMetaData(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()));
                     EditMetaData(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-
                 }
             }
             else if (dataEntry.GetVariableType() == typeof(Int16))
@@ -1225,8 +1224,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetInt16(dataEntry.GetVariableName(), BitConverter.ToInt16(dataEntry.GetVariableValue(), 0));
                     EditInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt16(dataEntry.GetVariableDefault(), 0)), "Int16");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt16(dataEntry.GetVariableDefault(), 0)), "Int16");
             }
             else if (dataEntry.GetVariableType() == typeof(Int32))
             {
@@ -1238,8 +1237,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetInt32(dataEntry.GetVariableName(), BitConverter.ToInt32(dataEntry.GetVariableValue(), 0));
                     EditInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt32(dataEntry.GetVariableDefault(), 0)), "Int32");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt32(dataEntry.GetVariableDefault(), 0)), "Int32");
             }
             else if (dataEntry.GetVariableType() == typeof(Int64))
             {
@@ -1251,8 +1250,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetInt64(dataEntry.GetVariableName(), BitConverter.ToInt64(dataEntry.GetVariableValue(), 0));
                     EditInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt64(dataEntry.GetVariableDefault(), 0)), "Int64");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt64(dataEntry.GetVariableDefault(), 0)), "Int64");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt16))
             {
@@ -1264,8 +1263,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetUInt16(dataEntry.GetVariableName(), BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0));
                     EditUInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt16(dataEntry.GetVariableDefault(), 0)), "UInt16");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt16(dataEntry.GetVariableDefault(), 0)), "UInt16");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt32))
             {
@@ -1277,8 +1276,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetUInt32(dataEntry.GetVariableName(), BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0));
                     EditUInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt32(dataEntry.GetVariableDefault(), 0)), "UInt32");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt32(dataEntry.GetVariableDefault(), 0)), "UInt32");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt64))
             {
@@ -1290,8 +1289,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetUInt64(dataEntry.GetVariableName(), BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0));
                     EditUInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt64(dataEntry.GetVariableDefault(), 0)), "UInt64");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt64(dataEntry.GetVariableDefault(), 0)), "UInt64");
             }
             else if (dataEntry.GetVariableType() == typeof(float))
             {
@@ -1303,8 +1302,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0));
                     EditFloat(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToSingle(dataEntry.GetVariableDefault(), 0)), "Float");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToSingle(dataEntry.GetVariableDefault(), 0)), "Float");
             }
             else if (dataEntry.GetVariableType() == typeof(Double))
             {
@@ -1316,8 +1315,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0));
                     EditDouble(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToDouble(dataEntry.GetVariableDefault(), 0)), "Double");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToDouble(dataEntry.GetVariableDefault(), 0)), "Double");
             }
             else if (dataEntry.GetVariableType() == typeof(String))
             {
@@ -1329,8 +1328,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetString(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()));
                     EditString(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "String");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "String");
             }
             else if (dataEntry.GetVariableType() == typeof(byte[]))
             {
@@ -1342,8 +1341,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableValue());
                     EditByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "UInt64");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "ByteArray");
             }
             else if (dataEntry.GetVariableType() == typeof(Boolean))
             {
@@ -1355,8 +1354,8 @@ namespace SimpleSettingsManager.Mode
                 {
                     SetBoolean(dataEntry.GetVariableName(), BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0));
                     EditBoolean(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
-                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToBoolean(dataEntry.GetVariableDefault(), 0)), "Boolean");
                 }
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToBoolean(dataEntry.GetVariableDefault(), 0)), "Boolean");
             }
         }
 
