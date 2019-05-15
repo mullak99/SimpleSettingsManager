@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace SimpleSettingsManager.Mode
@@ -110,7 +108,13 @@ namespace SimpleSettingsManager.Mode
         #endregion
 
         #region Add Variables
+
         public bool AddBoolean(string uniqueName, bool value, string description, string group = "default")
+        {
+            return AddBoolean(uniqueName, value, value, description, group);
+        }
+
+        public bool AddBoolean(string uniqueName, bool value, bool defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "Boolean"))
             {
@@ -136,7 +140,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -153,6 +157,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddByteArray(string uniqueName, byte[] value, string description, string group = "default")
+        {
+            return AddByteArray(uniqueName, value, value, description, group);
+        }
+
+        public bool AddByteArray(string uniqueName, byte[] value, byte[] defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "ByteArray"))
             {
@@ -178,7 +187,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = Encoding.UTF8.GetString(value);
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = Encoding.UTF8.GetString(value);
+                defaultValueNode.InnerText = Encoding.UTF8.GetString(defaultValue);
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -195,6 +204,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddDouble(string uniqueName, double value, string description, string group = "default")
+        {
+            return AddDouble(uniqueName, value, value, description, group);
+        }
+
+        public bool AddDouble(string uniqueName, double value, double defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "Double"))
             {
@@ -220,7 +234,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -237,6 +251,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddFloat(string uniqueName, float value, string description, string group = "default")
+        {
+            return AddFloat(uniqueName, value, value, description, group);
+        }
+
+        public bool AddFloat(string uniqueName, float value, float defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "Float"))
             {
@@ -262,7 +281,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -279,6 +298,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddInt16(string uniqueName, short value, string description, string group = "default")
+        {
+            return AddInt16(uniqueName, value, value, description, group);
+        }
+
+        public bool AddInt16(string uniqueName, short value, short defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "Int16"))
             {
@@ -304,7 +328,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -321,6 +345,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddInt32(string uniqueName, int value, string description, string group = "default")
+        {
+            return AddInt32(uniqueName, value, value, description, group);
+        }
+
+        public bool AddInt32(string uniqueName, int value, int defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "Int32"))
             {
@@ -346,7 +375,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -363,6 +392,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddInt64(string uniqueName, long value, string description, string group = "default")
+        {
+            return AddInt64(uniqueName, value, value, description, group);
+        }
+
+        public bool AddInt64(string uniqueName, long value, long defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "Int64"))
             {
@@ -388,7 +422,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -405,6 +439,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddUInt16(string uniqueName, UInt16 value, string description, string group = "default")
+        {
+            return AddUInt16(uniqueName, value, value, description, group);
+        }
+
+        public bool AddUInt16(string uniqueName, UInt16 value, UInt16 defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "UInt16"))
             {
@@ -430,7 +469,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -447,6 +486,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddUInt32(string uniqueName, UInt32 value, string description, string group = "default")
+        {
+            return AddUInt32(uniqueName, value, value, description, group);
+        }
+
+        public bool AddUInt32(string uniqueName, UInt32 value, UInt32 defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "UInt32"))
             {
@@ -472,7 +516,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -489,6 +533,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddUInt64(string uniqueName, UInt64 value, string description, string group = "default")
+        {
+            return AddUInt64(uniqueName, value, value, description, group);
+        }
+
+        public bool AddUInt64(string uniqueName, UInt64 value, UInt64 defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "UInt64"))
             {
@@ -514,7 +563,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -531,6 +580,11 @@ namespace SimpleSettingsManager.Mode
         }
 
         public bool AddString(string uniqueName, string value, string description, string group = "default")
+        {
+            return AddString(uniqueName, value, value, description, group);
+        }
+
+        public bool AddString(string uniqueName, string value, string defaultValue, string description, string group = "default")
         {
             if (!DoesVariableExist(uniqueName, "String"))
             {
@@ -556,7 +610,7 @@ namespace SimpleSettingsManager.Mode
                 varValueNode.InnerText = value.ToString();
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = value.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
                 varDescNode.InnerText = description.ToString();
@@ -1146,7 +1200,6 @@ namespace SimpleSettingsManager.Mode
         #endregion
 
         #region DataEntry
-
         public void ImportDataEntry(DataEntry dataEntry)
         {
             if (dataEntry.GetVariableType() == typeof(MetaDataObject))
@@ -1166,144 +1219,144 @@ namespace SimpleSettingsManager.Mode
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "Int16"))
                 {
-                    AddInt16(dataEntry.GetVariableName(), BitConverter.ToInt16(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddInt16(dataEntry.GetVariableName(), BitConverter.ToInt16(dataEntry.GetVariableValue(), 0), BitConverter.ToInt16(dataEntry.GetVariableDefault(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetInt16(dataEntry.GetVariableName(), BitConverter.ToInt16(dataEntry.GetVariableValue(), 0));
                     EditInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt16(dataEntry.GetVariableDefault(), 0)), "Int16");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt16(dataEntry.GetVariableValue(), 0)), "Int16");
             }
             else if (dataEntry.GetVariableType() == typeof(Int32))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "Int32"))
                 {
-                    AddInt32(dataEntry.GetVariableName(), BitConverter.ToInt32(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddInt32(dataEntry.GetVariableName(), BitConverter.ToInt32(dataEntry.GetVariableValue(), 0), BitConverter.ToInt32(dataEntry.GetVariableDefault(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetInt32(dataEntry.GetVariableName(), BitConverter.ToInt32(dataEntry.GetVariableValue(), 0));
                     EditInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt32(dataEntry.GetVariableDefault(), 0)), "Int32");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt32(dataEntry.GetVariableValue(), 0)), "Int32");
             }
             else if (dataEntry.GetVariableType() == typeof(Int64))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "Int64"))
                 {
-                    AddInt64(dataEntry.GetVariableName(), BitConverter.ToInt64(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddInt64(dataEntry.GetVariableName(), BitConverter.ToInt64(dataEntry.GetVariableValue(), 0), BitConverter.ToInt64(dataEntry.GetVariableDefault(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetInt64(dataEntry.GetVariableName(), BitConverter.ToInt64(dataEntry.GetVariableValue(), 0));
                     EditInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt64(dataEntry.GetVariableDefault(), 0)), "Int64");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToInt64(dataEntry.GetVariableValue(), 0)), "Int64");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt16))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "UInt16"))
                 {
-                    AddUInt16(dataEntry.GetVariableName(), BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddUInt16(dataEntry.GetVariableName(), BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0), BitConverter.ToUInt16(dataEntry.GetVariableDefault(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetUInt16(dataEntry.GetVariableName(), BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0));
                     EditUInt16(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt16(dataEntry.GetVariableDefault(), 0)), "UInt16");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt16(dataEntry.GetVariableValue(), 0)), "UInt16");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt32))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "UInt32"))
                 {
-                    AddUInt32(dataEntry.GetVariableName(), BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddUInt32(dataEntry.GetVariableName(), BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0), BitConverter.ToUInt32(dataEntry.GetVariableDefault(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetUInt32(dataEntry.GetVariableName(), BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0));
                     EditUInt32(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt32(dataEntry.GetVariableDefault(), 0)), "UInt32");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt32(dataEntry.GetVariableValue(), 0)), "UInt32");
             }
             else if (dataEntry.GetVariableType() == typeof(UInt64))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "UInt64"))
                 {
-                    AddUInt64(dataEntry.GetVariableName(), BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddUInt64(dataEntry.GetVariableName(), BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0), BitConverter.ToUInt64(dataEntry.GetVariableDefault(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetUInt64(dataEntry.GetVariableName(), BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0));
                     EditUInt64(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt64(dataEntry.GetVariableDefault(), 0)), "UInt64");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToUInt64(dataEntry.GetVariableValue(), 0)), "UInt64");
             }
             else if (dataEntry.GetVariableType() == typeof(float))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "Float"))
                 {
-                    AddFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0), BitConverter.ToSingle(dataEntry.GetVariableDefault(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0));
                     EditFloat(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToSingle(dataEntry.GetVariableDefault(), 0)), "Float");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToSingle(dataEntry.GetVariableValue(), 0)), "Float");
             }
             else if (dataEntry.GetVariableType() == typeof(Double))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "Double"))
                 {
-                    AddDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0), BitConverter.ToDouble(dataEntry.GetVariableDefault(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0));
                     EditDouble(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToDouble(dataEntry.GetVariableDefault(), 0)), "Double");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToDouble(dataEntry.GetVariableValue(), 0)), "Double");
             }
             else if (dataEntry.GetVariableType() == typeof(String))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "String"))
                 {
-                    AddString(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddString(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetString(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()));
                     EditString(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "String");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "String");
             }
             else if (dataEntry.GetVariableType() == typeof(byte[]))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "ByteArray"))
                 {
-                    AddByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableValue(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableValue(), dataEntry.GetVariableDefault(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableValue());
                     EditByteArray(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableDefault()), "UInt64");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Encoding.UTF8.GetString(dataEntry.GetVariableValue()), "UInt64");
             }
             else if (dataEntry.GetVariableType() == typeof(Boolean))
             {
                 if (!DoesVariableExist(dataEntry.GetVariableName(), "Boolean"))
                 {
-                    AddBoolean(dataEntry.GetVariableName(), BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    AddBoolean(dataEntry.GetVariableName(), BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0), BitConverter.ToBoolean(dataEntry.GetVariableDefault(), 0), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
                 else
                 {
                     SetBoolean(dataEntry.GetVariableName(), BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0));
                     EditBoolean(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
+                    EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToBoolean(dataEntry.GetVariableDefault(), 0)), "Boolean");
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToBoolean(dataEntry.GetVariableValue(), 0)), "Boolean");
             }
         }
 
