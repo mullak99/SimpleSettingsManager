@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SimpleSettingsManager.Mode
 {
@@ -907,19 +908,24 @@ namespace SimpleSettingsManager.Mode
         {
             List<DataEntry> dataList = new List<DataEntry>();
 
-            if (this.GetAllMetaData() != null) dataList.AddRange(this.GetAllMetaData());
-            if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16());
-            if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32());
-            if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64());
-            if (this.GetAllUInt16() != null) dataList.AddRange(this.GetAllUInt16());
-            if (this.GetAllUInt32() != null) dataList.AddRange(this.GetAllUInt32());
-            if (this.GetAllUInt64() != null) dataList.AddRange(this.GetAllUInt64());
-            if (this.GetAllFloat() != null) dataList.AddRange(this.GetAllFloat());
-            if (this.GetAllDouble() != null) dataList.AddRange(this.GetAllDouble());
-            if (this.GetAllString() != null) dataList.AddRange(this.GetAllString());
-            if (this.GetAllByteArrays() != null) dataList.AddRange(this.GetAllByteArrays());
-            if (this.GetAllBooleans() != null) dataList.AddRange(this.GetAllBooleans());
+            List<Task> allTypesTasks = new List<Task>
+            {
+                Task.Factory.StartNew(() => { try { if (this.GetAllMetaData() != null) dataList.AddRange(this.GetAllMetaData()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllUInt16() != null) dataList.AddRange(this.GetAllUInt16()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllUInt32() != null) dataList.AddRange(this.GetAllUInt32()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllUInt64() != null) dataList.AddRange(this.GetAllUInt64()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllFloat() != null) dataList.AddRange(this.GetAllFloat()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllDouble() != null) dataList.AddRange(this.GetAllDouble()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllString() != null) dataList.AddRange(this.GetAllString()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllByteArrays() != null) dataList.AddRange(this.GetAllByteArrays()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllBooleans() != null) dataList.AddRange(this.GetAllBooleans()); } catch { } })
+            };
+            Task.WaitAll(allTypesTasks.ToArray());
 
+            dataList.RemoveAll(item => item == null);
             return dataList.ToArray();
         }
 

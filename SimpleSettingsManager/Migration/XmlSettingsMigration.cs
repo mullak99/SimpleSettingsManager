@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace SimpleSettingsManager.Migration
@@ -18,17 +18,29 @@ namespace SimpleSettingsManager.Migration
         private string _xmlDocContent;
         private XmlDeclaration _xmlDocDec;
 
+        /// <summary>
+        /// Migrates an XmlSettings file to a new SSM File
+        /// </summary>
+        /// <param name="xmlSettingsXmlPath">Path to an XmlSettings file</param>
+        /// <param name="exportSsmFile">>New SSM File to write to</param>
         public XmlSettingsMigration(string xmlSettingsXmlPath, SSM_File exportSsmFile)
         {
-            if (File.Exists(xmlSettingsXmlPath))
+            if (File.Exists(xmlSettingsXmlPath) && Utilities.IsFileXML(xmlSettingsXmlPath))
             {
                 _xmlFilePath = xmlSettingsXmlPath;
                 _exportSsmFile = exportSsmFile;
                 _xmlDoc = new XmlDocument();
             }
-            else throw new Exception("Error: You can not migrate between the same SSM modes with CrossModeMigration!");
+            else
+            {
+                Logging.Log(String.Format("You did not specify a valid XmlSettings file for XmlSettingsMigration!"), Severity.ERROR);
+                throw new Exception("Error: You did not specify a valid XmlSettings file for XmlSettingsMigration!");
+            }
         }
 
+        /// <summary>
+        /// Begins the migration process
+        /// </summary>
         public void Migrate()
         {
             InitXmlSettingsXML();
@@ -43,20 +55,26 @@ namespace SimpleSettingsManager.Migration
 
                 foreach (DataEntry data in dataEntries)
                 {
-                    Console.WriteLine("Importing '{0}'", data.GetVariableName());
-                    exportSsm.ImportDataEntry(data);
+                    if (data != null)
+                    {
+                        Console.WriteLine("Importing '{0}'", data.GetVariableName());
+                        exportSsm.ImportDataEntry(data);
+                    }
                 }
                 exportSsm.UpdateXmlSettingsMigrationStatus();
             }
-            catch
+            catch (Exception e)
             {
-                throw new Exception("Error: An unexpected error occured within XmlSettingsMigration! Are you sure you selected a valid XmlSettings file?");
+                Logging.Log(String.Format("An unexpected error occured within XmlSettingsMigration! Exception: {0}", e.ToString()), Severity.ERROR);
+                throw new Exception("Error: An unexpected error occured within XmlSettingsMigration! Are you sure you selected a valid XmlSettings file? Exception: " + e.ToString());
             }
             finally
             {
                 exportSsm.Close();
             }
         }
+
+        #region Load XmlSettings XML File
 
         private void InitXmlSettingsXML()
         {
@@ -74,7 +92,8 @@ namespace SimpleSettingsManager.Migration
             }
             catch (Exception e)
             {
-                throw new Exception(String.Format("Loading XmlSettings Failed: {0}", e.ToString()));
+                Logging.Log(String.Format("Loading of the XmlSettings file failed!"), Severity.ERROR);
+                throw new Exception(String.Format("Error: Loading XmlSettings Failed: {0}", e.ToString()));
             }
         }
 
@@ -89,9 +108,13 @@ namespace SimpleSettingsManager.Migration
             }
             catch (Exception e)
             {
-                throw new Exception(String.Format("XmlSettings Declaration Error: {0}", e.ToString()));
+                Logging.Log(String.Format("XmlSettings XML Declaration is invalid!"), Severity.ERROR);
+                throw new FileLoadException(String.Format("XmlSettings XML Declaration Error: {0}", e.ToString()));
             }
         }
+
+        #endregion
+        #region Convert XmlSettings Entries to SSM-compatible DataEntries
 
         private DataEntry[] GetAllInt16()
         {
@@ -317,19 +340,25 @@ namespace SimpleSettingsManager.Migration
         {
             List<DataEntry> dataList = new List<DataEntry>();
 
-            if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16());
-            if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32());
-            if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64());
-            if (this.GetAllUInt16() != null) dataList.AddRange(this.GetAllUInt16());
-            if (this.GetAllUInt32() != null) dataList.AddRange(this.GetAllUInt32());
-            if (this.GetAllUInt64() != null) dataList.AddRange(this.GetAllUInt64());
-            if (this.GetAllFloat() != null) dataList.AddRange(this.GetAllFloat());
-            if (this.GetAllDouble() != null) dataList.AddRange(this.GetAllDouble());
-            if (this.GetAllString() != null) dataList.AddRange(this.GetAllString());
-            if (this.GetAllBytes() != null) dataList.AddRange(this.GetAllBytes());
-            if (this.GetAllBooleans() != null) dataList.AddRange(this.GetAllBooleans());
+            List<Task> allTypesTasks = new List<Task>
+            {
+                Task.Factory.StartNew(() => { try { if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllUInt16() != null) dataList.AddRange(this.GetAllUInt16()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllUInt32() != null) dataList.AddRange(this.GetAllUInt32()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllUInt64() != null) dataList.AddRange(this.GetAllUInt64()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllFloat() != null) dataList.AddRange(this.GetAllFloat()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllDouble() != null) dataList.AddRange(this.GetAllDouble()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllString() != null) dataList.AddRange(this.GetAllString()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllBytes() != null) dataList.AddRange(this.GetAllBytes()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllBooleans() != null) dataList.AddRange(this.GetAllBooleans()); } catch { } })
+            };
+            Task.WaitAll(allTypesTasks.ToArray());
 
             return dataList.ToArray();
         }
+
+        #endregion
     }
 }

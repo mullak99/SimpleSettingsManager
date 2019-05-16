@@ -7,6 +7,11 @@ namespace SimpleSettingsManager.Migration
     {
         private SSM_File _importSsmFile, _exportSsmFile;
 
+        /// <summary>
+        /// Migrates an SSM File of one mode to a new SSM File of another mode
+        /// </summary>
+        /// <param name="importSsmFile">SSM File to convert/migrate</param>
+        /// <param name="exportSsmFile">New SSM File to write to</param>
         public CrossModeMigration(SSM_File importSsmFile, SSM_File exportSsmFile)
         {
             if (importSsmFile.GetMode() != exportSsmFile.GetMode())
@@ -14,9 +19,16 @@ namespace SimpleSettingsManager.Migration
                 _importSsmFile = importSsmFile;
                 _exportSsmFile = exportSsmFile;
             }
-            else throw new Exception("Error: You can not migrate between the same SSM modes with CrossModeMigration!");
+            else
+            {
+                Logging.Log(String.Format("You cannot migrate between the same SSM modes with CrossModeMigration!"), Severity.ERROR);
+                throw new Exception("Error: You cannot migrate between the same SSM modes with CrossModeMigration!");
+            }
         }
 
+        /// <summary>
+        /// Begins the migration process
+        /// </summary>
         public void Migrate()
         {
             try
@@ -34,16 +46,20 @@ namespace SimpleSettingsManager.Migration
 
                 foreach (DataEntry data in dataEntries)
                 {
-                    Console.WriteLine("Importing '{0}'", data.GetVariableName());
-                    exportSsm.ImportDataEntry(data);
+                    if (data != null)
+                    {
+                        Console.WriteLine("Importing '{0}'", data.GetVariableName());
+                        exportSsm.ImportDataEntry(data);
+                    }
                 }
                 exportSsm.UpdateCrossModeMigrationStatus();
 
                 exportSsm.Close();
             }
-            catch
+            catch (Exception e)
             {
-                throw new Exception("Error: An unexpected error occured within CrossModeMigration!");
+                Logging.Log(String.Format("An unexpected error occured within CrossModeMigration!"), Severity.ERROR);
+                throw new Exception("Error: An unexpected error occured within CrossModeMigration! Error: " + e.ToString());
             }
         }
     }

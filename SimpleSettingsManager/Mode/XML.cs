@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace SimpleSettingsManager.Mode
@@ -111,7 +112,8 @@ namespace SimpleSettingsManager.Mode
             }
             catch (Exception e)
             {
-                throw new Exception(String.Format("Loading XML Failed: {0}", e.ToString()));
+                Logging.Log(String.Format("XML file could not be loaded!"), Severity.ERROR);
+                throw new FileLoadException(String.Format("Loading XML Failed: {0}", e.ToString()));
             }
         }
 
@@ -1618,19 +1620,24 @@ namespace SimpleSettingsManager.Mode
         {
             List<DataEntry> dataList = new List<DataEntry>();
 
-            if (this.GetAllMetaData() != null) dataList.AddRange(this.GetAllMetaData());
-            if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16());
-            if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32());
-            if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64());
-            if (this.GetAllUInt16() != null) dataList.AddRange(this.GetAllUInt16());
-            if (this.GetAllUInt32() != null) dataList.AddRange(this.GetAllUInt32());
-            if (this.GetAllUInt64() != null) dataList.AddRange(this.GetAllUInt64());
-            if (this.GetAllFloat() != null) dataList.AddRange(this.GetAllFloat());
-            if (this.GetAllDouble() != null) dataList.AddRange(this.GetAllDouble());
-            if (this.GetAllString() != null) dataList.AddRange(this.GetAllString());
-            if (this.GetAllByteArrays() != null) dataList.AddRange(this.GetAllByteArrays());
-            if (this.GetAllBooleans() != null) dataList.AddRange(this.GetAllBooleans());
+            List<Task> allTypesTasks = new List<Task>
+            {
+                Task.Factory.StartNew(() => { try { if (this.GetAllMetaData() != null) dataList.AddRange(this.GetAllMetaData()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllInt16() != null) dataList.AddRange(this.GetAllInt16()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllInt32() != null) dataList.AddRange(this.GetAllInt32()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllInt64() != null) dataList.AddRange(this.GetAllInt64()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllUInt16() != null) dataList.AddRange(this.GetAllUInt16()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllUInt32() != null) dataList.AddRange(this.GetAllUInt32()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllUInt64() != null) dataList.AddRange(this.GetAllUInt64()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllFloat() != null) dataList.AddRange(this.GetAllFloat()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllDouble() != null) dataList.AddRange(this.GetAllDouble()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllString() != null) dataList.AddRange(this.GetAllString()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllByteArrays() != null) dataList.AddRange(this.GetAllByteArrays()); } catch { } }),
+                Task.Factory.StartNew(() => { try { if (this.GetAllBooleans() != null) dataList.AddRange(this.GetAllBooleans()); } catch { } })
+            };
+            Task.WaitAll(allTypesTasks.ToArray());
 
+            dataList.RemoveAll(item => item == null);
             return dataList.ToArray();
         }
 
@@ -1754,7 +1761,10 @@ namespace SimpleSettingsManager.Mode
                     else if (type == "Boolean")
                         de = new DataEntry(typeof(Boolean), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(defVal), desc);
                     else
-                        throw new Exception(String.Format("Unknown type '{0}'", type));
+                    {
+                        Logging.Log(String.Format("Type '{0}' is not supported!", type), Severity.ERROR);
+                        throw new NotSupportedException(String.Format("Unknown type '{0}'", type));
+                    }   
                 }
                 else
                     de = new DataEntry(typeof(MetaDataObject), uniqueName, group, Encoding.UTF8.GetBytes(value), Encoding.UTF8.GetBytes(value), desc);
@@ -1850,7 +1860,8 @@ namespace SimpleSettingsManager.Mode
             }
             catch (Exception e)
             {
-                throw new Exception(String.Format("XML Declaration Error: {0}", e.ToString()));
+                Logging.Log(String.Format("XML Declaration is invalid!"), Severity.ERROR);
+                throw new FileLoadException(String.Format("XML Declaration Error: {0}", e.ToString()));
             }
         }
 

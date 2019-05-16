@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimpleSettingsManager.Data
 {
@@ -31,31 +27,55 @@ namespace SimpleSettingsManager.Data
             _varDesc = VariableDescription;
         }
 
+        /// <summary>
+        /// Get variable type
+        /// </summary>
+        /// <returns>A variables type</returns>
         public Type GetVariableType()
         {
             return _varType;
         }
 
+        /// <summary>
+        /// Get variable name
+        /// </summary>
+        /// <returns>A variables unique name</returns>
         public string GetVariableName()
         {
             return _varName;
         }
 
+        /// <summary>
+        /// Get variable group
+        /// </summary>
+        /// <returns>A variables group</returns>
         public string GetVariableGroup()
         {
             return _varGroup;
         }
 
+        /// <summary>
+        /// Get variable value
+        /// </summary>
+        /// <returns>A variables value</returns>
         public byte[] GetVariableValue()
         {
             return _varValue;
         }
 
+        /// <summary>
+        /// Get variable default value
+        /// </summary>
+        /// <returns>A variables default value</returns>
         public byte[] GetVariableDefault()
         {
             return _varDefault;
         }
 
+        /// <summary>
+        /// Get variable description
+        /// </summary>
+        /// <returns>A variables description</returns>
         public string GetVariableDescription()
         {
             return _varDesc;
