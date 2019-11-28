@@ -1,99 +1,41 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Costura.Fody.4.0.0\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.4.0.0\build\Costura.Fody.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B4E5C358-6C6C-48F5-8D50-B6179070AFBB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimpleSettingsManager</RootNamespace>
-    <AssemblyName>SSM</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFrameworks>net45;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <Version>1.0.0-beta2</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <PackageReleaseNotes>- Changed targeted frameworks to .NET Framework 4.5 and .NET Standard (2.0 and 2.1)</PackageReleaseNotes>
+    <Authors>mullak99</Authors>
+    <Description>A library that allows for the easy saving of settings and variables.</Description>
+    <FileVersion>1.0.0.0</FileVersion>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <RepositoryUrl>https://github.com/mullak99/SimpleSettingsManager</RepositoryUrl>
+    <Copyright>Copyright © 2019 | mullak99</Copyright>
+    <PackageTags>settings, settingsmanager, ssm, sqlite, xml, sqlite-database, xml-database</PackageTags>
+    <Product>SimpleSettingsManager</Product>
+    <PackageId>SimpleSettingsManager</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Company>mullak99</Company>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Costura, Version=4.0.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Costura.Fody.4.0.0\lib\net40\Costura.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.110.0\lib\net45\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.110.0\lib\net45\System.Data.SQLite.EF6.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.110.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Data\DataEntry.cs" />
-    <Compile Include="Logging.cs" />
-    <Compile Include="Migration\CrossModeMigration.cs" />
-    <Compile Include="Migration\OldVersionMigration.cs" />
-    <Compile Include="Migration\XmlSettingsMigration.cs" />
-    <Compile Include="Mode\IMode.cs" />
-    <Compile Include="Mode\SQLite.cs" />
-    <Compile Include="Mode\XML.cs" />
-    <Compile Include="SSM.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="costura64\SQLite.Interop.dll" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="costura32\SQLite.Interop.dll" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Fody.5.0.6\build\Fody.targets" Condition="Exists('..\packages\Fody.5.0.6\build\Fody.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Fody.5.0.6\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.5.0.6\build\Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\Costura.Fody.4.0.0\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.4.0.0\build\Costura.Fody.props'))" />
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net45\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.110.0\build\net45\System.Data.SQLite.Core.targets'))" />
-  </Target>
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.110.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net45\System.Data.SQLite.Core.targets')" />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="4.1.0" />
+    <PackageReference Include="Fody" Version="6.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
+  </ItemGroup>
+
 </Project>

@@ -12,7 +12,7 @@ namespace SimpleSettingsManager
         private const string _minSsmFormatVer = "1.0";
 
         private const bool IsPreReleaseBuild = true;
-        private const string PreReleaseTag = "BETA_1";
+        private const string PreReleaseTag = "BETA_2";
 
         private static bool _verboseMode = false;
         private static bool _logToFile = false; 
