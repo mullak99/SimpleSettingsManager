@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net45;net46;netstandard2.0</TargetFrameworks>
     <Version>1.0.0-beta2</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <PackageReleaseNotes>- Changed targeted frameworks to .NET Framework 4.5 and .NET Standard (2.0 and 2.1)</PackageReleaseNotes>
@@ -10,7 +10,7 @@
     <FileVersion>1.0.0.0</FileVersion>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/mullak99/SimpleSettingsManager</RepositoryUrl>
-    <Copyright>Copyright © 2019 | mullak99</Copyright>
+    <Copyright>Copyright © 2020 | mullak99</Copyright>
     <PackageTags>settings, settingsmanager, ssm, sqlite, xml, sqlite-database, xml-database</PackageTags>
     <Product>SimpleSettingsManager</Product>
     <PackageId>SimpleSettingsManager</PackageId>
@@ -30,12 +30,12 @@
   
   <ItemGroup>
     <PackageReference Include="Costura.Fody" Version="4.1.0" />
-    <PackageReference Include="Fody" Version="6.0.5">
+    <PackageReference Include="Fody" Version="6.2.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.113.1" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.1" />
   </ItemGroup>
 
 </Project>
