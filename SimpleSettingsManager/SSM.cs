@@ -11,14 +11,14 @@ namespace SimpleSettingsManager
         private const string _ssmFormatVer = "1.0";
         private const string _minSsmFormatVer = "1.0";
 
-        private const bool IsPreReleaseBuild = true;
-        private const string PreReleaseTag = "BETA_2";
+        private const bool IsPreReleaseBuild = false;
+        private const string PreReleaseTag = "";
 
-        private static bool _verboseMode = false;
-        private static bool _logToFile = false; 
+        private static bool _verboseMode;
+        private static bool _logToFile; 
 
-        private SSM_File _ssmFile;
-        private IMode _handler;
+        private readonly SSM_File _ssmFile;
+        private readonly IMode _handler;
 
         /// <summary>
         /// Creates a new SSM instance with the chosen SSM File
@@ -29,7 +29,7 @@ namespace SimpleSettingsManager
             _ssmFile = ssmFile;
             _handler = _ssmFile.GetHandler();
 
-            Logging.Log(String.Format("New SSM instance started! ({0})", DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")));
+            Logging.Log(String.Format("New SSM instance started! ({0:dd/MM/yyyy hh:mm:ss tt})", DateTime.Now));
             Logging.Log(String.Format("SSM_File Name: {0}, SSM_File Mode: {1}, SSM_File Path: {2}", _ssmFile.GetFileName(), _ssmFile.GetMode(), _ssmFile.GetPath(true)), Severity.DEBUG);
         }
 
@@ -64,9 +64,11 @@ namespace SimpleSettingsManager
         {
             #pragma warning disable CS0162 //Unreachable code detected
             string[] ver = (typeof(SSM).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version).Split('.');
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (!IsPreReleaseBuild)
                 return "v" + ver[0] + "." + ver[1] + "." + ver[2];
             else
+                // ReSharper disable once HeuristicUnreachableCode
                 return "v" + ver[0] + "." + ver[1] + "." + ver[2] + "-" + PreReleaseTag;
             #pragma warning restore CS0162 //Unreachable code detected
         }
@@ -1217,7 +1219,7 @@ namespace SimpleSettingsManager
         /// <returns>An array of DataEntries</returns>
         public DataEntry[] GetAllShort()
         {
-            return GetAllShort();
+            return GetAllInt16();
         }
 
         /// <summary>
@@ -1369,8 +1371,8 @@ namespace SimpleSettingsManager
 
     public class SSM_File
     {
-        private string _settingsPath;
-        private Mode _mode;
+        private readonly string _settingsPath;
+        private readonly Mode _mode;
         private IMode _handler;
 
         /// <summary>
@@ -1413,7 +1415,7 @@ namespace SimpleSettingsManager
             }
             else
             {
-                Logging.Log(String.Format("SSM File format not supported!"), Severity.ERROR);
+                Logging.Log("SSM File format not supported!", Severity.ERROR);
                 throw new FileLoadException("Unsupported file format!");
             }
         }

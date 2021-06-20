@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,17 +16,15 @@ namespace SimpleSettingsManager
             {
                 fs.Read(bytes, 0, 16);
             }
-            string chkStr = ASCIIEncoding.ASCII.GetString(bytes);
+            string chkStr = Encoding.ASCII.GetString(bytes);
             return chkStr.Contains("SQLite format");
         }
 
         public static bool IsFileXML(string settingsPath)
         {
-            XElement xml;
-
             try
             {
-                xml = XElement.Load(settingsPath);
+                XElement.Load(settingsPath);
                 return true;
             }
             catch
@@ -65,7 +62,5 @@ namespace SimpleSettingsManager
 
     internal class MetaDataObject
     {
-        public MetaDataObject()
-        { }
     }
 }

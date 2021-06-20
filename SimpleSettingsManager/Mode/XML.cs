@@ -1,22 +1,23 @@
 ﻿using SimpleSettingsManager.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+// ReSharper disable PossibleNullReferenceException
 
 namespace SimpleSettingsManager.Mode
 {
+    [SuppressMessage("ReSharper", "MethodOverloadWithOptionalParameter")]
     internal class XML : IMode
     {
-        private XmlDocument _xmlDoc = new XmlDocument();
+        private readonly XmlDocument _xmlDoc = new XmlDocument();
         private XmlElement _xmlDocBody;
-        private string _xmlDocContent;
-        private XmlDeclaration _xmlDocDec;
 
         private bool _autoSave = true;
-
         private string _settingsPath;
 
         #region Init
@@ -107,13 +108,12 @@ namespace SimpleSettingsManager.Mode
             try
             {
                 _xmlDoc.Load(_settingsPath);
-                _xmlDocContent = _xmlDoc.InnerXml;
                 _xmlDocBody = _xmlDoc.DocumentElement;
             }
             catch (Exception e)
             {
-                Logging.Log(String.Format("XML file could not be loaded!"), Severity.ERROR);
-                throw new FileLoadException(String.Format("Loading XML Failed: {0}", e.ToString()));
+                Logging.Log("XML file could not be loaded!", Severity.ERROR);
+                throw new FileLoadException(String.Format("Loading XML Failed: {0}", e));
             }
         }
 
@@ -133,7 +133,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddBoolean(string uniqueName, bool value, bool defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "Boolean"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "Boolean"))
             {
                 XmlNode headingNode = AddToHeadingNode("Boolean");
                 _xmlDocBody.AppendChild(headingNode);
@@ -160,7 +160,7 @@ namespace SimpleSettingsManager.Mode
                 defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -180,7 +180,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddByteArray(string uniqueName, byte[] value, byte[] defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "ByteArray"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "ByteArray"))
             {
                 XmlNode headingNode = AddToHeadingNode("ByteArray");
                 _xmlDocBody.AppendChild(headingNode);
@@ -207,7 +207,7 @@ namespace SimpleSettingsManager.Mode
                 defaultValueNode.InnerText = Encoding.UTF8.GetString(defaultValue);
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -227,7 +227,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddDouble(string uniqueName, double value, double defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "Double"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "Double"))
             {
                 XmlNode headingNode = AddToHeadingNode("Double");
                 _xmlDocBody.AppendChild(headingNode);
@@ -248,13 +248,13 @@ namespace SimpleSettingsManager.Mode
                 groupNode.AppendChild(varNode);
 
                 XmlNode varValueNode = _xmlDoc.CreateElement("value");
-                varValueNode.InnerText = value.ToString();
+                varValueNode.InnerText = value.ToString(CultureInfo.InvariantCulture);
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = defaultValue.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString(CultureInfo.InvariantCulture);
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -274,7 +274,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddFloat(string uniqueName, float value, float defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "Float"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "Float"))
             {
                 XmlNode headingNode = AddToHeadingNode("Float");
                 _xmlDocBody.AppendChild(headingNode);
@@ -295,13 +295,13 @@ namespace SimpleSettingsManager.Mode
                 groupNode.AppendChild(varNode);
 
                 XmlNode varValueNode = _xmlDoc.CreateElement("value");
-                varValueNode.InnerText = value.ToString();
+                varValueNode.InnerText = value.ToString(CultureInfo.InvariantCulture);
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = defaultValue.ToString();
+                defaultValueNode.InnerText = defaultValue.ToString(CultureInfo.InvariantCulture);
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -321,7 +321,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddInt16(string uniqueName, short value, short defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "Int16"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "Int16"))
             {
                 XmlNode headingNode = AddToHeadingNode("Int16");
                 _xmlDocBody.AppendChild(headingNode);
@@ -348,7 +348,7 @@ namespace SimpleSettingsManager.Mode
                 defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -368,7 +368,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddInt32(string uniqueName, int value, int defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "Int32"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "Int32"))
             {
                 XmlNode headingNode = AddToHeadingNode("Int32");
                 _xmlDocBody.AppendChild(headingNode);
@@ -395,7 +395,7 @@ namespace SimpleSettingsManager.Mode
                 defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -415,7 +415,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddInt64(string uniqueName, long value, long defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "Int64"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "Int64"))
             {
                 XmlNode headingNode = AddToHeadingNode("Int64");
                 _xmlDocBody.AppendChild(headingNode);
@@ -442,7 +442,7 @@ namespace SimpleSettingsManager.Mode
                 defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -462,7 +462,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddUInt16(string uniqueName, UInt16 value, UInt16 defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "UInt16"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "UInt16"))
             {
                 XmlNode headingNode = AddToHeadingNode("UInt16");
                 _xmlDocBody.AppendChild(headingNode);
@@ -489,7 +489,7 @@ namespace SimpleSettingsManager.Mode
                 defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -509,7 +509,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddUInt32(string uniqueName, UInt32 value, UInt32 defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "UInt32"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "UInt32"))
             {
                 XmlNode headingNode = AddToHeadingNode("UInt32");
                 _xmlDocBody.AppendChild(headingNode);
@@ -536,7 +536,7 @@ namespace SimpleSettingsManager.Mode
                 defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -556,7 +556,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddUInt64(string uniqueName, UInt64 value, UInt64 defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "UInt64"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "UInt64"))
             {
                 XmlNode headingNode = AddToHeadingNode("UInt64");
                 _xmlDocBody.AppendChild(headingNode);
@@ -583,7 +583,7 @@ namespace SimpleSettingsManager.Mode
                 defaultValueNode.InnerText = defaultValue.ToString();
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -603,7 +603,7 @@ namespace SimpleSettingsManager.Mode
 
         public bool AddString(string uniqueName, string value, string defaultValue, string description, string group = "default")
         {
-            if (!DoesVariableExist(uniqueName, "String"))
+            if (_xmlDoc != null && !DoesVariableExist(uniqueName, "String"))
             {
                 XmlNode headingNode = AddToHeadingNode("String");
                 _xmlDocBody.AppendChild(headingNode);
@@ -624,13 +624,13 @@ namespace SimpleSettingsManager.Mode
                 groupNode.AppendChild(varNode);
 
                 XmlNode varValueNode = _xmlDoc.CreateElement("value");
-                varValueNode.InnerText = value.ToString();
+                varValueNode.InnerText = value;
 
                 XmlNode defaultValueNode = _xmlDoc.CreateElement("default");
-                defaultValueNode.InnerText = defaultValue.ToString();
+                defaultValueNode.InnerText = defaultValue;
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(defaultValueNode);
@@ -680,7 +680,7 @@ namespace SimpleSettingsManager.Mode
             {
                 XmlNode xmlNode = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*/{1}", "Double", uniqueName))[0];
 
-                xmlNode.SelectSingleNode("value").InnerText = value.ToString();
+                xmlNode.SelectSingleNode("value").InnerText = value.ToString(CultureInfo.InvariantCulture);
 
                 if (_autoSave) SaveXML();
 
@@ -695,7 +695,7 @@ namespace SimpleSettingsManager.Mode
             {
                 XmlNode xmlNode = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*/{1}", "Float", uniqueName))[0];
 
-                xmlNode.SelectSingleNode("value").InnerText = value.ToString();
+                xmlNode.SelectSingleNode("value").InnerText = value.ToString(CultureInfo.InvariantCulture);
 
                 if (_autoSave) SaveXML();
 
@@ -800,7 +800,7 @@ namespace SimpleSettingsManager.Mode
             {
                 XmlNode xmlNode = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*/{1}", "String", uniqueName))[0];
 
-                xmlNode.SelectSingleNode("value").InnerText = value.ToString();
+                xmlNode.SelectSingleNode("value").InnerText = value;
 
                 if (_autoSave) SaveXML();
 
@@ -1166,10 +1166,10 @@ namespace SimpleSettingsManager.Mode
                 groupNode.AppendChild(varNode);
 
                 XmlNode varValueNode = _xmlDoc.CreateElement("value");
-                varValueNode.InnerText = varValue.ToString();
+                varValueNode.InnerText = varValue;
 
                 XmlNode varDescNode = _xmlDoc.CreateElement("description");
-                varDescNode.InnerText = description.ToString();
+                varDescNode.InnerText = description;
 
                 varNode.AppendChild(varValueNode);
                 varNode.AppendChild(varDescNode);
@@ -1187,7 +1187,7 @@ namespace SimpleSettingsManager.Mode
             {
                 XmlNode xmlNode = _xmlDoc.SelectNodes(String.Format("//SSM/_MetaData/*/{0}", varName))[0];
 
-                xmlNode.SelectSingleNode("value").InnerText = varValue.ToString();
+                xmlNode.SelectSingleNode("value").InnerText = varValue;
 
                 if (_autoSave) SaveXML();
 
@@ -1320,7 +1320,7 @@ namespace SimpleSettingsManager.Mode
                     SetFloat(dataEntry.GetVariableName(), BitConverter.ToSingle(dataEntry.GetVariableValue(), 0));
                     EditFloat(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToSingle(dataEntry.GetVariableDefault(), 0)), "Float");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToSingle(dataEntry.GetVariableDefault(), 0), CultureInfo.InvariantCulture), "Float");
             }
             else if (dataEntry.GetVariableType() == typeof(Double))
             {
@@ -1333,7 +1333,7 @@ namespace SimpleSettingsManager.Mode
                     SetDouble(dataEntry.GetVariableName(), BitConverter.ToDouble(dataEntry.GetVariableValue(), 0));
                     EditDouble(dataEntry.GetVariableName(), dataEntry.GetVariableDescription(), dataEntry.GetVariableGroup());
                 }
-                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToDouble(dataEntry.GetVariableDefault(), 0)), "Double");
+                EditVarDefault(dataEntry.GetVariableName(), Convert.ToString(BitConverter.ToDouble(dataEntry.GetVariableDefault(), 0), CultureInfo.InvariantCulture), "Double");
             }
             else if (dataEntry.GetVariableType() == typeof(String))
             {
@@ -1616,6 +1616,7 @@ namespace SimpleSettingsManager.Mode
             return null;
         }
 
+        [SuppressMessage("ReSharper", "EmptyGeneralCatchClause")]
         public DataEntry[] GetAllTypes()
         {
             List<DataEntry> dataList = new List<DataEntry>();
@@ -1689,34 +1690,28 @@ namespace SimpleSettingsManager.Mode
             return false;
         }
 
-        private bool EditVarDefault(string uniqueName, string defaultValue, string type)
+        private void EditVarDefault(string uniqueName, string defaultValue, string type)
         {
             if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*/{1}", type, uniqueName)).Count == 1)
             {
                 XmlNode xmlNode = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*/{1}", type, uniqueName))[0];
 
-                xmlNode.SelectSingleNode("default").InnerText = defaultValue.ToString();
+                xmlNode.SelectSingleNode("default").InnerText = defaultValue;
 
                 if (_autoSave) SaveXML();
-
-                return true;
             }
-            return false;
         }
 
-        private bool EditVarDesc(string uniqueName, string description, string type)
+        private void EditVarDesc(string uniqueName, string description, string type)
         {
             if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*/{1}", type, uniqueName)).Count == 1)
             {
                 XmlNode xmlNode = _xmlDoc.SelectNodes(String.Format("//SSM/{0}/*/{1}", type, uniqueName))[0];
 
-                xmlNode.SelectSingleNode("description").InnerText = description.ToString();
+                xmlNode.SelectSingleNode("description").InnerText = description;
 
                 if (_autoSave) SaveXML();
-
-                return true;
             }
-            return false;
         }
 
         private string GetVarGroup(string uniqueName, string type)
@@ -1730,7 +1725,7 @@ namespace SimpleSettingsManager.Mode
             return null;
         }
 
-        private bool MoveVarGroup(string uniqueName, string group, string type)
+        private void MoveVarGroup(string uniqueName, string group, string type)
         {
             if (_xmlDoc.SelectNodes(String.Format("//SSM/{0}/*/{1}", type, uniqueName)).Count == 1)
             {
@@ -1774,10 +1769,7 @@ namespace SimpleSettingsManager.Mode
                 ImportDataEntry(de);
 
                 if (_autoSave) SaveXML();
-
-                return true;
             }
-            return false;
         }
 
         private bool DoesMetaDataVariableExist(string varName)
@@ -1855,13 +1847,12 @@ namespace SimpleSettingsManager.Mode
             {
                 if (_xmlDoc.ChildNodes[0].NodeType == XmlNodeType.XmlDeclaration)
                 {
-                    _xmlDocDec = _xmlDoc.ChildNodes[0] as XmlDeclaration;
                 }
             }
             catch (Exception e)
             {
-                Logging.Log(String.Format("XML Declaration is invalid!"), Severity.ERROR);
-                throw new FileLoadException(String.Format("XML Declaration Error: {0}", e.ToString()));
+                Logging.Log("XML Declaration is invalid!", Severity.ERROR);
+                throw new FileLoadException(String.Format("XML Declaration Error: {0}", e));
             }
         }
 

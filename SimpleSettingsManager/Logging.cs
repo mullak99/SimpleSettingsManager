@@ -29,7 +29,6 @@ namespace SimpleSettingsManager
                             formattedLog = String.Format("[ERROR] {0}", log);
                             break;
                         }
-                    case Severity.INFO:
                     default:
                         {
                             formattedLog = String.Format("[INFO] {0}", log);

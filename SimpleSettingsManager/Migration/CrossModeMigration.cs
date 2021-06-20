@@ -21,7 +21,7 @@ namespace SimpleSettingsManager.Migration
             }
             else
             {
-                Logging.Log(String.Format("You cannot migrate between the same SSM modes with CrossModeMigration!"), Severity.ERROR);
+                Logging.Log("You cannot migrate between the same SSM modes with CrossModeMigration!", Severity.ERROR);
                 throw new Exception("Error: You cannot migrate between the same SSM modes with CrossModeMigration!");
             }
         }
@@ -58,8 +58,8 @@ namespace SimpleSettingsManager.Migration
             }
             catch (Exception e)
             {
-                Logging.Log(String.Format("An unexpected error occured within CrossModeMigration!"), Severity.ERROR);
-                throw new Exception("Error: An unexpected error occured within CrossModeMigration! Error: " + e.ToString());
+                Logging.Log("An unexpected error occured within CrossModeMigration!", Severity.ERROR);
+                throw new Exception("Error: An unexpected error occured within CrossModeMigration! Error: " + e);
             }
         }
     }

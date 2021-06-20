@@ -1,6 +1,7 @@
 ﻿using SimpleSettingsManager.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,15 +9,13 @@ using System.Xml;
 
 namespace SimpleSettingsManager.Migration
 {
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class XmlSettingsMigration
     {
-        private string _xmlFilePath;
-        private SSM_File _exportSsmFile;
+        private readonly string _xmlFilePath;
+        private readonly SSM_File _exportSsmFile;
 
-        private XmlDocument _xmlDoc;
-        private XmlElement _xmlDocBody;
-        private string _xmlDocContent;
-        private XmlDeclaration _xmlDocDec;
+        private readonly XmlDocument _xmlDoc;
 
         /// <summary>
         /// Migrates an XmlSettings file to a new SSM File
@@ -33,7 +32,7 @@ namespace SimpleSettingsManager.Migration
             }
             else
             {
-                Logging.Log(String.Format("You did not specify a valid XmlSettings file for XmlSettingsMigration!"), Severity.ERROR);
+                Logging.Log("You did not specify a valid XmlSettings file for XmlSettingsMigration!", Severity.ERROR);
                 throw new Exception("Error: You did not specify a valid XmlSettings file for XmlSettingsMigration!");
             }
         }
@@ -65,8 +64,8 @@ namespace SimpleSettingsManager.Migration
             }
             catch (Exception e)
             {
-                Logging.Log(String.Format("An unexpected error occured within XmlSettingsMigration! Exception: {0}", e.ToString()), Severity.ERROR);
-                throw new Exception("Error: An unexpected error occured within XmlSettingsMigration! Are you sure you selected a valid XmlSettings file? Exception: " + e.ToString());
+                Logging.Log(String.Format("An unexpected error occured within XmlSettingsMigration! Exception: {0}", e), Severity.ERROR);
+                throw new Exception("Error: An unexpected error occured within XmlSettingsMigration! Are you sure you selected a valid XmlSettings file? Exception: " + e);
             }
             finally
             {
@@ -87,13 +86,11 @@ namespace SimpleSettingsManager.Migration
             try
             {
                 _xmlDoc.Load(_xmlFilePath);
-                _xmlDocContent = _xmlDoc.InnerXml;
-                _xmlDocBody = _xmlDoc.DocumentElement;
             }
             catch (Exception e)
             {
-                Logging.Log(String.Format("Loading of the XmlSettings file failed!"), Severity.ERROR);
-                throw new Exception(String.Format("Error: Loading XmlSettings Failed: {0}", e.ToString()));
+                Logging.Log("Loading of the XmlSettings file failed!", Severity.ERROR);
+                throw new Exception(String.Format("Error: Loading XmlSettings Failed: {0}", e));
             }
         }
 
@@ -103,13 +100,12 @@ namespace SimpleSettingsManager.Migration
             {
                 if (_xmlDoc.ChildNodes[0].NodeType == XmlNodeType.XmlDeclaration)
                 {
-                    _xmlDocDec = _xmlDoc.ChildNodes[0] as XmlDeclaration;
                 }
             }
             catch (Exception e)
             {
-                Logging.Log(String.Format("XmlSettings XML Declaration is invalid!"), Severity.ERROR);
-                throw new FileLoadException(String.Format("XmlSettings XML Declaration Error: {0}", e.ToString()));
+                Logging.Log("XmlSettings XML Declaration is invalid!", Severity.ERROR);
+                throw new FileLoadException(String.Format("XmlSettings XML Declaration Error: {0}", e));
             }
         }
 
@@ -336,6 +332,7 @@ namespace SimpleSettingsManager.Migration
             return null;
         }
 
+        [SuppressMessage("ReSharper", "EmptyGeneralCatchClause")]
         public DataEntry[] GetAllTypes()
         {
             List<DataEntry> dataList = new List<DataEntry>();

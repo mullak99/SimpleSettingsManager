@@ -4,9 +4,9 @@ namespace SimpleSettingsManager.Data
 {
     public class DataEntry
     {
-        private Type _varType;
-        private string _varName, _varGroup, _varDesc;
-        private byte[] _varValue, _varDefault;
+        private readonly Type _varType;
+        private readonly string _varName, _varGroup, _varDesc;
+        private readonly byte[] _varValue, _varDefault;
 
         /// <summary>
         /// [PotentiallyDestructive] Manual creation of DataEntries are not recommended since it could potentially break the database/file they are stored in.
